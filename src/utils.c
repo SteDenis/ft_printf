@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:58:57 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/22 17:19:29 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/25 13:38:05 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_print.h"
+#include "ft_printf.h"
 
-int		get_size_flag(t_printf *tab, const char *str, int *k, int prec)
+int		get_size_flag(t_printf *tab, const char *str, int prec)
 {
 	int		i;
 	int		value;
@@ -30,7 +30,7 @@ int		get_size_flag(t_printf *tab, const char *str, int *k, int prec)
 			tab->arg.prec = value;
 		else
 			tab->arg.larg = value;
-		*k += i - 1;
+		tab->fmt += i - 1;
 		return (1);
 	}
 	return (0);
