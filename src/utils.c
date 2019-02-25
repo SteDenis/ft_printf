@@ -27,10 +27,15 @@ int		get_size_flag(t_printf *tab, const char *str, int prec)
 	if (i > 0)
 	{
 		if (prec == 1)
+		{
+			tab->fmt += i;
 			tab->arg.prec = value;
+		}
 		else
+		{
 			tab->arg.larg = value;
-		tab->fmt += i - 1;
+			tab->fmt += i - 1;
+		}
 		return (1);
 	}
 	return (0);

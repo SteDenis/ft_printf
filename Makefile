@@ -33,9 +33,8 @@ TMP		:=	build/tmp.txt
 CC		?=	cc
 
 INCFLAG	:= -I $(INCDIR)
-STDFLAG	?=	-ansi
 WFLAGS	?=	-Wall -Wextra -Werror -pedantic
-CFLAGS	=	$(WFLAGS) $(INCFLAG) $(STDFLAG)
+CFLAGS	=	$(WFLAGS) $(INCFLAG)
 
 LD		:=	ar
 LDFLAG	:=	rcs

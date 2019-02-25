@@ -30,6 +30,10 @@ int 	arg_printf(t_printf *tab, char c)
 		tab->arg.type = P;
 	else if (c == 'c')
 		tab->arg.type = C;
+	else if (c == 'f')
+		tab->arg.type = F;
+	else if (c == '%')
+		tab->arg.type = PERCENT;
 	else
 		return (0);
 	return (1);
@@ -49,15 +53,19 @@ int 	arg_flags(t_printf *tab, const char *format)
 	tab->arg.flag = (tab->arg.flag | SPACE);
 	else if (format[tab->fmt] == '.')
 	{
-		tab->fmt++;
 		tab->arg.flag = (tab->arg.flag | PREC) & ~(ZERO);
-		get_size_flag(tab, &format[tab->fmt], 1);
+		get_size_flag(tab, &format[tab->fmt + 1], 1);
 	}
 	else if (format[tab->fmt] == 'h')
+		if (tab->arg.flag & H)
+			tab->arg.flag = (tab->arg.flag | HH) & ~(H);
+		else
+			tab->arg.flag = (tab->arg.flag | H);
+	else if (format[tab->fmt] == 'l')
 		if (tab->arg.flag & L)
 			tab->arg.flag = (tab->arg.flag | LL) & ~(L);
 		else
-			tab->arg.flag = (tab->arg.flag | H);
+			tab->arg.flag = (tab->arg.flag | L);
 	else
 		return (0);
 	return (1);
@@ -77,6 +85,11 @@ int 	check_arg(const char *format, t_printf *tab)
 		}
 		if (mode == 0)
 			fill_buffer(format[tab->fmt++], tab);
+		else if (format[tab->fmt] == '%')
+		{
+			fill_buffer(format[tab->fmt++], tab);
+			return (mode = 0);
+		}
 		else
 		{
 			if (arg_flags(tab, format))

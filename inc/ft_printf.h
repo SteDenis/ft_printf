@@ -40,7 +40,9 @@ enum {
 	O = 4,
 	U = 5,
 	X = 6,
-	XX = 7
+	XX = 7,
+	PERCENT = 8,
+	F = 9
 };
 
 typedef	struct			s_arg
