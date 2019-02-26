@@ -12,13 +12,17 @@
 include include.mk
 NAME	:=	$(LIBFT_PRTF)
 
-SRC=	arguments.c	\
-		buffer.c	\
-		ft_printf.c	\
-		string.c	\
-		char.c		\
-		integer.c	\
-		utils.c		\
+SRC=	arguments.c		\
+		buffer.c		\
+		ft_printf.c		\
+		string.c		\
+		char.c			\
+		integer.c		\
+		pointers.c		\
+		hexadecimal.c	\
+		octal.c			\
+		ft_putnbrs.c	\
+		utils.c			\
 
 SRCDIR	:=	src
 INCDIR	:=	inc

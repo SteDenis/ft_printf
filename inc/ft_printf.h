@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:37:39 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/25 15:47:18 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/26 15:34:39 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef unsigned int	flags;
 
@@ -88,6 +89,29 @@ void	check_char(const char value, t_printf *tab);
 ** integer.c
 */
 void	check_integer(va_list ap, t_printf *tab);
+void	check_unsigned_integer(va_list ap, t_printf *tab);
+
+/*
+** hexadecimal.c
+*/
+void	check_hexadecimal(va_list ap, t_printf *tab);
+
+/*
+** octal.c
+*/
+void	check_octal(va_list ap, t_printf *tab);
+
+/*
+** pointers.c
+*/
+void	check_pointers(void *value, t_printf *tab);
+
+/*
+** ft_putnbrs.c
+*/
+void	ft_putnbr_buffer_pos(intmax_t res, t_printf *tab);
+void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab);
+void	ft_putnbr_buffer_conv(intmax_t res, t_printf *tab, char *base);
 
 /*
 ** ft_printf.c
@@ -101,4 +125,5 @@ void					*ft_memset(void *b, int c, size_t n);
 size_t					ft_strlen(const char *str);
 void					ft_putstr(char const *s);
 int						get_size_flag(t_printf *tab, const char *str, int prec);
+int						int_length(intmax_t value, int base);
 #endif

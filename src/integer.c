@@ -6,48 +6,22 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 15:16:42 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/25 17:35:28 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/26 16:28:19 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_printf.h"
 
-void	ft_putnbr_buffer_pos(intmax_t res, t_printf *tab)
+void	fill_integer(intmax_t value, t_printf *tab, char fill)
 {
-	if (res > 9)
-	{
-		ft_putnbr_buffer_pos(res / 10, tab);
-		fill_buffer((res % 10) + '0', tab);
-	}
-	else if (res >= 0)
-		fill_buffer(res + '0', tab);
-}
-
-void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab)
-{
-	if (res < -9)
-	{
-		ft_putnbr_buffer_neg(res / 10, tab);
-		fill_buffer(-(res % 10) + '0', tab);
-	}
-	else if (res <= 0)
-		fill_buffer((-res) + '0', tab);
-}
-
-
-void	fill_integer(intmax_t value, t_printf *tab)
-{
-	char	fill;
 	bool	print;
 
-	fill = ' ';
-	print = (value == 0 && tab->arg.prec == 0 && tab->arg.flag & PREC) ? false : true;
-	if (tab->arg.flag & ZERO)
+	print = true;
+	if (value == 0 && tab->arg.prec == 0 && tab->arg.flag & PREC)
 	{
-		fill = '0';
-		if (value < 0)
-			fill_buffer('-', tab);
+		print = false;
+		tab->arg.larg++;
 	}
 	if (tab->arg.flag & ZERO && tab->arg.flag & PLUS && value >= 0)
 		fill_buffer('+', tab);
@@ -69,31 +43,13 @@ void	fill_integer(intmax_t value, t_printf *tab)
 		fill_buffer(fill, tab);
 }
 
-size_t	int_length(intmax_t value)
-{
-	size_t	i;
-
-	i = 0;
-	if (value < 0)
-	{
-		value++;
-		value *= -1;
-	}
-	while (value > 0)
-	{
-		i++;
-		value /= 10;
-	}
-	return ((i == 0) ? 1 : i);
-}
-
 void	prepare_int(intmax_t value, t_printf *tab)
 {
-	size_t	len;
+	int		len;
 
-	len = int_length(value);
+	len = int_length(value, 10);
 	if (tab->arg.flag & PREC)
-		tab->arg.prec = ((int)len < tab->arg.prec) ? tab->arg.prec - (int)len : 0;
+		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
 	tab->arg.larg -= len;
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	if (tab->arg.flag & PLUS && value >= 0)
@@ -102,7 +58,14 @@ void	prepare_int(intmax_t value, t_printf *tab)
 		tab->arg.larg--;
 	if (value < 0)
 		tab->arg.larg--;
-	fill_integer(value, tab);
+	if (tab->arg.flag & ZERO)
+	{
+		if (value < 0)
+			fill_buffer('-', tab);
+		fill_integer(value, tab, '0');
+	}
+	else
+		fill_integer(value, tab, ' ');
 }
 
 void	check_integer(va_list ap, t_printf *tab)
@@ -117,4 +80,18 @@ void	check_integer(va_list ap, t_printf *tab)
 		prepare_int((long long int)va_arg(ap, intmax_t), tab);
 	else
 		prepare_int((int)va_arg(ap, intmax_t), tab);
+}
+
+void	check_unsigned_integer(va_list ap, t_printf *tab)
+{
+	if (tab->arg.flag & H)
+		prepare_int((unsigned short int)va_arg(ap, intmax_t), tab);
+	else if (tab->arg.flag & HH)
+		prepare_int((unsigned char)va_arg(ap, intmax_t), tab);
+	else if (tab->arg.flag & L)
+		prepare_int((unsigned long int)va_arg(ap, intmax_t), tab);
+	else if (tab->arg.flag & LL)
+		prepare_int((unsigned long long int)va_arg(ap, intmax_t), tab);
+	else
+		prepare_int((unsigned int)va_arg(ap, intmax_t), tab);
 }

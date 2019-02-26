@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/25 17:17:47 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/26 14:05:58 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ int 	arg_printf(t_printf *tab, char c)
 		tab->arg.type = F;
 	else if (c == '%')
 		tab->arg.type = PERCENT;
-	else
-		return (0);
 	return (1);
 }
 
@@ -85,11 +83,6 @@ int 	check_arg(const char *format, t_printf *tab)
 		}
 		if (mode == 0)
 			fill_buffer(format[tab->fmt++], tab);
-		else if (format[tab->fmt] == '%')
-		{
-			fill_buffer(format[tab->fmt++], tab);
-			return (mode = 0);
-		}
 		else
 		{
 			if (arg_flags(tab, format))

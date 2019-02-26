@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:58:57 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/25 13:38:05 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/26 11:54:17 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,24 @@ int		get_size_flag(t_printf *tab, const char *str, int prec)
 		return (1);
 	}
 	return (0);
+}
+
+int		int_length(intmax_t value, int base)
+{
+	size_t	i;
+
+	i = 0;
+	if (value < 0)
+	{
+		value++;
+		value *= -1;
+	}
+	while (value > 0)
+	{
+		i++;
+		value /= base;
+	}
+	return ((i == 0) ? 1 : i);
 }
 
 void	*ft_memset(void *b, int c, size_t n)

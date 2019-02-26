@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   char.c                                             :+:      :+:    :+:   */
+/*   pointers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/25 15:01:04 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 10:55:17 by stdenis          ###   ########.fr       */
+/*   Created: 2019/02/26 14:11:34 by stdenis           #+#    #+#             */
+/*   Updated: 2019/02/26 15:40:47 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	fill_with_char(const char value, t_printf *tab)
+void	fill_pointers(void *value, t_printf *tab)
 {
-	size_t		i;
-
-	i = -1;
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(' ', tab);
-	fill_buffer(value, tab);
+	fill_buffer('0', tab);
+	fill_buffer('x', tab);
+	while (tab->arg.prec-- > 0)
+		fill_buffer('0', tab);
+	ft_putnbr_buffer_conv((intmax_t)value, tab, "0123456789abcdef");
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(' ', tab);
 }
 
-void	check_char(const char value, t_printf *tab)
+void	check_pointers(void *value, t_printf *tab)
 {
-	size_t		len;
+	int		len;
 
-	len = 1;
+	len = int_length((intmax_t)value, 16);
 	if (tab->arg.flag & PREC)
-		len = ((int)len < tab->arg.prec) ? 1 : tab->arg.prec;
-	tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
-	fill_with_char(value, tab);
+		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
+	tab->arg.larg -= len + 2;
+	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
+	fill_pointers(value, tab);
 }
