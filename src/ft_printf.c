@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:32:02 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 15:35:26 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/02/28 11:47:15 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int		ft_printf(const char *format, ...)
 			check_pointers(va_arg(ap, void *), &tab);
 		else if (tab.arg.type == XX || tab.arg.type == X)
 			check_hexadecimal(ap, &tab);
+		else if (tab.arg.type == F)
+			check_float(ap, &tab);
 		else if (tab.arg.type == O)
 			check_octal(ap, &tab);
 		ft_memset(&tab.arg, 0, sizeof(tab.arg));

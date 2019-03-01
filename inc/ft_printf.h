@@ -107,6 +107,11 @@ void	check_octal(va_list ap, t_printf *tab);
 void	check_pointers(void *value, t_printf *tab);
 
 /*
+** float.c
+*/
+void	check_float(va_list ap, t_printf *tab);
+
+/*
 ** ft_putnbrs.c
 */
 void	ft_putnbr_buffer_pos(intmax_t res, t_printf *tab);
