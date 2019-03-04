@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 14:05:58 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/04 14:48:17 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int 	arg_flags(t_printf *tab, const char *format)
 	tab->arg.flag = (tab->arg.flag | PLUS) & ~(SPACE);
 	else if (format[tab->fmt] == '#')
 	tab->arg.flag = (tab->arg.flag | HASH);
-	else if (format[tab->fmt] == '0' && !(tab->arg.flag & PREC) && !(tab->arg.flag & MINUS))
+	else if (format[tab->fmt] == '0' && !(tab->arg.flag & MINUS))
 	tab->arg.flag = (tab->arg.flag | ZERO);
 	else if (format[tab->fmt] == ' ' && !(tab->arg.flag & PLUS))
 	tab->arg.flag = (tab->arg.flag | SPACE);
 	else if (format[tab->fmt] == '.')
 	{
-		tab->arg.flag = (tab->arg.flag | PREC) & ~(ZERO);
+		tab->arg.flag = (tab->arg.flag | PREC);
 		get_size_flag(tab, &format[tab->fmt + 1], 1);
 	}
 	else if (format[tab->fmt] == 'h')
@@ -64,6 +64,8 @@ int 	arg_flags(t_printf *tab, const char *format)
 			tab->arg.flag = (tab->arg.flag | LL) & ~(L);
 		else
 			tab->arg.flag = (tab->arg.flag | L);
+	else if (format[tab->fmt] == 'L')
+			tab->arg.flag = (tab->arg.flag | LDBL);
 	else
 		return (0);
 	return (1);

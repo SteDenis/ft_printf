@@ -20,7 +20,8 @@ SRC=	arguments.c		\
 		integer.c		\
 		pointers.c		\
 		hexadecimal.c	\
-		float.c			\
+		double.c		\
+		transform_ldbl.c\
 		octal.c			\
 		ft_putnbrs.c	\
 		utils.c			\

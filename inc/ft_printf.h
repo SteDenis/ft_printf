@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:37:39 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 15:34:39 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/04 15:36:14 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "double.h"
 
 typedef unsigned int	flags;
 
@@ -30,7 +31,8 @@ enum {
 	HH = 0x40,
 	H = 0x80,
 	LL = 0x100,
-	L = 0x200
+	L = 0x200,
+	LDBL = 0x400
 };
 
 enum {
@@ -107,9 +109,14 @@ void	check_octal(va_list ap, t_printf *tab);
 void	check_pointers(void *value, t_printf *tab);
 
 /*
-** float.c
+** double.c
 */
-void	check_float(va_list ap, t_printf *tab);
+int			check_float(va_list ap, t_printf *tab);
+void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab);
+/*
+** transform_ldbl.c
+*/
+void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab);
 
 /*
 ** ft_putnbrs.c

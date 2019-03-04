@@ -55,7 +55,7 @@ void	check_float(va_list ap, t_printf *tab)
 {
 	double		fl;
 	double		res;
-	int 		prec =20;
+	int 		prec =1000;
 	intmax_t	size;
 
 	(void)tab;
