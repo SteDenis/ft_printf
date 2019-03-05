@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:37:39 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/04 15:36:14 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 18:22:03 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill);
 ** utils_double.c
 */
 void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab);
+void		re_positioning_pointers(t_dbl *tab_dbl, uint32_t last, int decal);
+void		check_inf_or_nan(t_uniondbl *uni, t_dbl *tab_dbl, t_printf *tab);
 
 /*
 ** transform_ldbl.c
@@ -129,7 +131,7 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab);
 */
 void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab);
-void	ft_putnbr_buffer_conv(intmax_t res, t_printf *tab, char *base);
+void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base);
 
 /*
 ** ft_printf.c

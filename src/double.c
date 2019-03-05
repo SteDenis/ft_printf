@@ -39,7 +39,6 @@ static void	printing_ldbl(t_dbl *tab_dbl, t_printf *tab)
 {
 	size_t	len;
 
-	tab_dbl->digits = tab_dbl->head;
 	while (tab_dbl->digits <= tab_dbl->before_dot)
 	{
 		len = int_length(*tab_dbl->digits, 10);
@@ -65,7 +64,7 @@ static void	printing_ldbl(t_dbl *tab_dbl, t_printf *tab)
 		fill_buffer('0', tab);
 }
 
-void	printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
+void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
 {
 	size_t	len;
 

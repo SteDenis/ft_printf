@@ -6,39 +6,41 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 14:55:36 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 16:00:49 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 18:26:41 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "double.h"
 
-static long double ft_frexpl(long double value, int *exp)
+static long double	frxp(long double n, int *ex, t_dbl *tab_dbl, t_printf *tab)
 {
-	union
-	{
-		long double val;
-		struct 			s_binary
-		{
-			unsigned mantissa2 : 32;
-			unsigned mantissa1 : 32;
-			unsigned exponent : 15;
-			unsigned sign :  1;
-			unsigned empty : 16;
-		}				t_binary;
-	}					u_uniondbl;
+	t_uniondbl	uni;
 
-	if (!value)
-		return ((long double) 0);
-	u_uniondbl.val = value;
-	*exp = u_uniondbl.t_binary.exponent - 16383;
-	u_uniondbl.t_binary.exponent = 16383;
-	return (u_uniondbl.val);
+	tab_dbl->sign = 0;
+	if (!n)
+		return ((long double)0);
+	if (n < 0)
+	{
+		tab_dbl->sign = 1;
+		n = -n;
+	}
+	uni.val = n;
+	if (uni.t_binary.exponent == 0x7FFF)
+	{
+		check_inf_or_nan(&uni, tab_dbl, tab);
+		return ((long double)-1);
+	}
+	*ex = uni.t_binary.exponent - 16383;
+	uni.t_binary.exponent = 16383;
+	return (uni.val);
 }
 
-static void	redirect_pointers_tab(t_dbl *tab_dbl, int exponent)
+static void			redirect_pointers_tab(t_dbl *tab_dbl, int exponent)
 {
-	int i = 0;
+	int i;
+
+	i = 0;
 	while (i < 1999)
 	{
 		tab_dbl->numbers[i] = 0;
@@ -58,7 +60,7 @@ static void	redirect_pointers_tab(t_dbl *tab_dbl, int exponent)
 	}
 }
 
-static void	handler_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
+static void			h_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
 {
 	uint32_t	carry;
 	uint64_t	value;
@@ -85,13 +87,12 @@ static void	handler_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
 	rounding_ldbl(tab_dbl, tab);
 }
 
-static void	handler_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
+static void			h_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 {
 	uint32_t	last;
-	uint32_t	*ptr;
 	uint32_t	value;
 	int			power;
-	int 		decal;
+	int			decal;
 
 	while (exponent < 0)
 	{
@@ -106,30 +107,20 @@ static void	handler_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 			last = (1000000000 >> power) * value;
 			tab_dbl->digits++;
 		}
-		if (!*tab_dbl->head)
-			tab_dbl->head++;
-		if (last)
-			*tab_dbl->last++ = last;
-		ptr = tab_dbl->before_dot;
-		if (tab_dbl->last - ptr > decal)
-			tab_dbl->last = ptr + decal;
+		re_positioning_pointers(tab_dbl, last, decal);
 		exponent += power;
 	}
 	rounding_ldbl(tab_dbl, tab);
 }
 
-/*
-** Transform the long double in a normalized number with ft_frexpl.
-** If ldbl != 0, multiplicate by 0x1p28 (2^28 = 268435456) for better precision.
-** Reduce exponent in the same way - (28 + 1) 1 for last bit to 0.
-*/
-void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
+void				transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
 {
 	int		exponent;
 
+	exponent = 0;
+	tab_dbl->ldbl = frxp(tab_dbl->ldbl, &exponent, tab_dbl, tab) * 2;
 	if (tab_dbl->ldbl < 0)
-		tab_dbl->ldbl = -tab_dbl->ldbl;
-	tab_dbl->ldbl = ft_frexpl(tab_dbl->ldbl, &exponent) * 2;
+		return ;
 	if (tab_dbl->ldbl)
 	{
 		tab_dbl->ldbl *= 0x1p28;
@@ -144,7 +135,7 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
 		tab_dbl->ldbl = 1000000000 * (tab_dbl->ldbl - *tab_dbl->last++);
 	}
 	if (exponent > 0)
-		handler_ldbl_pos(tab_dbl, tab, exponent);
+		h_ldbl_pos(tab_dbl, tab, exponent);
 	else
-		handler_ldbl_neg(tab_dbl, tab, exponent);
+		h_ldbl_neg(tab_dbl, tab, exponent);
 }

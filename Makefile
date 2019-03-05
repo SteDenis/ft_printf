@@ -18,10 +18,12 @@ SRC=	arguments.c		\
 		string.c		\
 		char.c			\
 		integer.c		\
+		unsigned.c		\
 		pointers.c		\
 		hexadecimal.c	\
 		double.c		\
 		transform_ldbl.c\
+		utils_double.c	\
 		octal.c			\
 		ft_putnbrs.c	\
 		utils.c			\

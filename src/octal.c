@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:17:40 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 18:32:12 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 19:09:39 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	fill_oct(intmax_t value, t_printf *tab, char fill)
+static void	fill_oct(uintmax_t value, t_printf *tab, char fill)
 {
 	bool print;
 
@@ -33,7 +33,7 @@ void	fill_oct(intmax_t value, t_printf *tab, char fill)
 		fill_buffer(fill, tab);
 }
 
-void	prepare_oct(intmax_t value, t_printf *tab)
+static void	prepare_oct(uintmax_t value, t_printf *tab)
 {
 	int		len;
 
@@ -56,13 +56,13 @@ void	prepare_oct(intmax_t value, t_printf *tab)
 void	check_octal(va_list ap, t_printf *tab)
 {
 	if (tab->arg.flag & H)
-		prepare_oct((unsigned short int)va_arg(ap, intmax_t), tab);
+		prepare_oct((unsigned short int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & HH)
-		prepare_oct((unsigned char)va_arg(ap, intmax_t), tab);
+		prepare_oct((unsigned char)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & L)
-		prepare_oct((unsigned long int)va_arg(ap, intmax_t), tab);
+		prepare_oct((unsigned long int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & LL)
-		prepare_oct((unsigned long long int)va_arg(ap, intmax_t), tab);
+		prepare_oct((unsigned long long int)va_arg(ap, uintmax_t), tab);
 	else
-		prepare_oct((unsigned int)va_arg(ap, intmax_t), tab);
+		prepare_oct((unsigned int)va_arg(ap, uintmax_t), tab);
 }

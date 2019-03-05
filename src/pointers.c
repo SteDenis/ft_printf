@@ -20,7 +20,10 @@ void	fill_pointers(void *value, t_printf *tab)
 	fill_buffer('x', tab);
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
-	ft_putnbr_buffer_conv((intmax_t)value, tab, "0123456789abcdef");
+	if (value == NULL)
+		fill_buffer('0', tab);
+	else
+		ft_putnbr_buffer_conv((uintmax_t)value, tab, "0123456789abcdef");
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(' ', tab);
 }
