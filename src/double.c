@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 12:45:26 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 13:20:57 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 15:56:46 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	printing_ldbl(t_dbl *tab_dbl, t_printf *tab)
 	{
 		len = int_length(*tab_dbl->digits, 10);
 		tab->arg.prec -= len;
-		while (len++ < 9 && tab->arg.prec-- > 0)
+		while (len++ < 9 && tab->arg.prec--)
 			fill_buffer('0', tab);
 		while (tab->arg.prec < 0 && tab->arg.prec++)
 			*tab_dbl->digits = (*tab_dbl->digits / 10);
