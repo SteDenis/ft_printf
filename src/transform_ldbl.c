@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 14:55:36 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/04 20:21:56 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 12:10:06 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "double.h"
-#include <stdio.h>
+
 static long double ft_frexpl(long double value, int *exp)
 {
 	union
@@ -38,6 +38,12 @@ static long double ft_frexpl(long double value, int *exp)
 
 static void	redirect_pointers_tab(t_dbl *tab_dbl, int exponent)
 {
+	int i = 0;
+	while (i < 1999)
+	{
+		tab_dbl->numbers[i] = 0;
+		i++;
+	}
 	if (exponent < 0)
 	{
 		tab_dbl->last = tab_dbl->numbers;
@@ -61,7 +67,7 @@ static void	handler_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
 	while (exponent > 0)
 	{
 		carry = 0;
-		power = (exponent < 29) ? exponent : 29;
+		power = (29 < exponent) ? 29 : exponent;
 		tab_dbl->digits = tab_dbl->last - 1;
 		while (tab_dbl->digits >= tab_dbl->head)
 		{
@@ -82,14 +88,17 @@ static void	handler_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
 static void	handler_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 {
 	uint32_t	last;
-	uint64_t	value;
+	uint32_t	*ptr;
+	uint32_t	value;
 	int			power;
+	int 		decal;
 
 	while (exponent < 0)
 	{
 		last = 0;
-		power = (-exponent < 9) ? -exponent : 9;
+		power = (9 < -exponent) ? 9 : -exponent;
 		tab_dbl->digits = tab_dbl->head;
+		decal = 4 + ((tab->arg.prec + 9) / 9);
 		while (tab_dbl->digits < tab_dbl->last)
 		{
 			value = *tab_dbl->digits & (1 << power) - 1;
@@ -99,6 +108,11 @@ static void	handler_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 		}
 		if (!*tab_dbl->head)
 			tab_dbl->head++;
+		if (last)
+			*tab_dbl->last++ = last;
+		ptr = tab_dbl->before_dot;
+		if (tab_dbl->last - ptr > decal)
+			tab_dbl->last = ptr + decal;
 		exponent += power;
 	}
 	rounding_ldbl(tab_dbl, tab);
@@ -121,7 +135,6 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
 		tab_dbl->ldbl *= 0x1p28;
 		exponent -= 29;
 	}
-	printf("EXP = %d\n", exponent);
 	redirect_pointers_tab(tab_dbl, exponent);
 	*tab_dbl->last = tab_dbl->ldbl;
 	tab_dbl->ldbl = 1000000000 * (tab_dbl->ldbl - *tab_dbl->last++);
@@ -134,5 +147,4 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
 		handler_ldbl_pos(tab_dbl, tab, exponent);
 	else
 		handler_ldbl_neg(tab_dbl, tab, exponent);
-	(void)tab;
 }

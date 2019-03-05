@@ -112,7 +112,13 @@ void	check_pointers(void *value, t_printf *tab);
 ** double.c
 */
 int			check_float(va_list ap, t_printf *tab);
+void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill);
+
+/*
+** utils_double.c
+*/
 void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab);
+
 /*
 ** transform_ldbl.c
 */
@@ -121,7 +127,7 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab);
 /*
 ** ft_putnbrs.c
 */
-void	ft_putnbr_buffer_pos(intmax_t res, t_printf *tab);
+void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_conv(intmax_t res, t_printf *tab, char *base);
 

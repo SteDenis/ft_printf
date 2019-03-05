@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:55:31 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 14:02:53 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/05 10:10:15 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ void	ft_putnbr_buffer_conv(intmax_t res, t_printf *tab, char *base)
 	}
 }
 
-void	ft_putnbr_buffer_pos(intmax_t res, t_printf *tab)
+void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
 {
 	if (res > 9)
 	{
 		ft_putnbr_buffer_pos(res / 10, tab);
 		fill_buffer((res % 10) + '0', tab);
 	}
-	else if (res >= 0)
+	else
 		fill_buffer(res + '0', tab);
 }
 
