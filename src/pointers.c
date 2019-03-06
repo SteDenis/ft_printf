@@ -14,13 +14,16 @@
 
 void	fill_pointers(void *value, t_printf *tab)
 {
+	bool		prec;
+
+	prec = (tab->arg.prec > 0 || !(tab->arg.flag & PREC)) ? true : false;
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(' ', tab);
 	fill_buffer('0', tab);
 	fill_buffer('x', tab);
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
-	if (value == NULL)
+	if (value == NULL && prec)
 		fill_buffer('0', tab);
 	else
 		ft_putnbr_buffer_conv((uintmax_t)value, tab, "0123456789abcdef");

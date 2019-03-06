@@ -19,7 +19,11 @@
 #include <stdint.h>
 #include "double.h"
 
+
+#include <stdio.h>
+
 typedef unsigned int	flags;
+typedef void			(*t_fnc[4])	(va_list, void*);
 
 enum {
 	HASH = 0x01,
@@ -63,6 +67,7 @@ typedef struct			s_printf
 	size_t	fmt;
 	size_t	buff;
 	size_t	rtn;
+	t_fnc	dispatcher;
 	char	buffer[2048];
 }						t_printf;
 

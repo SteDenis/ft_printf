@@ -51,7 +51,10 @@ static void	prepare_un(uintmax_t value, t_printf *tab)
 
 	len = int_length(value, 10);
 	if (tab->arg.flag & PREC)
+	{
+		tab->arg.flag &= ~(ZERO);
 		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
+	}
 	tab->arg.larg -= len;
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	if (tab->arg.flag & ZERO)

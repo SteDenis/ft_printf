@@ -33,7 +33,7 @@ int		ft_printf(const char *format, ...)
 		else if (tab.arg.type == U)
 			check_unsigned_integer(ap, &tab);
 		else if (tab.arg.type == PERCENT)
-			fill_buffer('%', &tab);
+			check_string("%", &tab);
 		else if (tab.arg.type == P)
 			check_pointers(va_arg(ap, void *), &tab);
 		else if (tab.arg.type == XX || tab.arg.type == X)

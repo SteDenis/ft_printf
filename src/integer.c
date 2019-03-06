@@ -13,6 +13,26 @@
 #include <stdint.h>
 #include "ft_printf.h"
 
+static void	fill_integer_zero(intmax_t value, t_printf *tab, char fill)
+{
+	if (tab->arg.flag & SPACE && value >= 0)
+		fill_buffer(' ', tab);
+	if (value < 0)
+		fill_buffer('-', tab);
+	if (tab->arg.flag & PLUS && value >= 0)
+		fill_buffer('+', tab);
+	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+		fill_buffer(fill, tab);
+	while (tab->arg.prec-- > 0)
+		fill_buffer('0', tab);
+	if (value < 0)
+		ft_putnbr_buffer_neg(value, tab);
+	else
+		ft_putnbr_buffer_pos(value, tab);
+	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+		fill_buffer(fill, tab);
+}
+
 static void	fill_integer(intmax_t value, t_printf *tab, char fill)
 {
 	bool	print;
@@ -23,15 +43,13 @@ static void	fill_integer(intmax_t value, t_printf *tab, char fill)
 		print = false;
 		tab->arg.larg++;
 	}
-	if (tab->arg.flag & ZERO && tab->arg.flag & PLUS && value >= 0)
-		fill_buffer('+', tab);
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 	if (tab->arg.flag & SPACE && value >= 0)
 		fill_buffer(' ', tab);
-	if (!(tab->arg.flag & ZERO) && tab->arg.flag & PLUS && value >= 0)
+	if (tab->arg.flag & PLUS && value >= 0)
 		fill_buffer('+', tab);
-	if (!(tab->arg.flag & ZERO) && value < 0)
+	if (value < 0)
 		fill_buffer('-', tab);
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
@@ -49,21 +67,23 @@ static void	prepare_int(intmax_t value, t_printf *tab)
 
 	len = int_length(value, 10);
 	if (tab->arg.flag & PREC)
+	{
+		tab->arg.flag &= ~(ZERO);
 		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
+	}
 	tab->arg.larg -= len;
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	if (tab->arg.flag & PLUS && value >= 0)
+	{
 		tab->arg.larg--;
+		tab->arg.flag &= ~(SPACE);
+	}
 	if (tab->arg.flag & SPACE && value >= 0)
 		tab->arg.larg--;
 	if (value < 0)
 		tab->arg.larg--;
-	if (tab->arg.flag & ZERO)
-	{
-		if (value < 0)
-			fill_buffer('-', tab);
-		fill_integer(value, tab, '0');
-	}
+	if (tab->arg.flag & ZERO && !(tab->arg.flag & MINUS))
+		fill_integer_zero(value, tab, '0');
 	else
 		fill_integer(value, tab, ' ');
 }

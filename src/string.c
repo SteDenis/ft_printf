@@ -38,7 +38,7 @@ void	check_string(const char *value, t_printf *tab)
 	else
 	{
 		len = ft_strlen(value);
-		if (tab->arg.flag & PREC && tab->arg.type != F)
+		if (tab->arg.flag & PREC && tab->arg.type == S)
 			len = ((int)len < tab->arg.prec) ? len : tab->arg.prec;
 		tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
 		fill_with_string(value, tab, len);

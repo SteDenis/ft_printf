@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 #include "double.h"
 
-static void	print_zero(t_printf *tab, char fill)
+/*static void	print_zero(t_printf *tab, char fill)
 {
 	int		minus;
 
@@ -33,7 +33,7 @@ static void	print_zero(t_printf *tab, char fill)
 		fill_buffer('0', tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
-}
+}*/
 
 static void	printing_ldbl(t_dbl *tab_dbl, t_printf *tab)
 {
@@ -69,12 +69,20 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
 	size_t	len;
 
 	len = 0;
+	if ((tab->arg.flag & PLUS) && (tab->arg.flag & ZERO) && tab_dbl->sign == 0)
+		fill_buffer('+', tab);
+	if (tab->arg.flag & SPACE && (tab->arg.flag & ZERO) && tab_dbl->sign == 0)
+		fill_buffer(' ', tab);
+	if ((tab->arg.flag & ZERO) && tab_dbl->sign == 1)
+		fill_buffer('-', tab);
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
-	if (tab->arg.flag & SPACE)
+	if (tab->arg.flag & SPACE && !(tab->arg.flag & ZERO)  && tab_dbl->sign == 0)
 		fill_buffer(' ', tab);
-	if (tab->arg.flag & PLUS)
+	if (tab->arg.flag & PLUS && !(tab->arg.flag & ZERO) && tab_dbl->sign == 0)
 		fill_buffer('+', tab);
+	if (tab_dbl->sign == 1 && !(tab->arg.flag & ZERO))
+		fill_buffer('-', tab);
 	printing_ldbl(tab_dbl, tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
@@ -82,8 +90,8 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
 
 int			check_float(va_list ap, t_printf *tab)
 {
-	t_dbl	tab_dbl;
-	int		check;
+	t_dbl			tab_dbl;
+	unsigned int	check;
 
 	check = 0;
 	if (!(tab->arg.flag & PREC))
@@ -91,19 +99,29 @@ int			check_float(va_list ap, t_printf *tab)
 	if (!(tab->arg.flag & LDBL))
 	{
 		tab_dbl.dbl = va_arg(ap, double);
-		check = (int)&tab_dbl.dbl;
-		if ((check & 0x10))
+		/*if ((check << 24 == 0))
 		{
 			if (tab->arg.flag & ZERO)
 				print_zero(tab, '0');
 			else
 				print_zero(tab, ' ');
 			return (1);
-		}
+		}*/
 		tab_dbl.ldbl = (long double)tab_dbl.dbl;
 	}
 	else
+	{
 		tab_dbl.ldbl = va_arg(ap, long double);
+		check = (unsigned int) &tab_dbl.dbl;
+		/*if ((check << 24 != 0))
+		{
+			if (tab->arg.flag & ZERO)
+				print_zero(tab, '0');
+			else
+				print_zero(tab, ' ');
+			return (1);
+		}*/
+	}
 	transform_ldbl_80b(&tab_dbl, tab);
 	return (0);
 }

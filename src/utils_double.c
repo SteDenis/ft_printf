@@ -33,7 +33,7 @@ static void	calculate_nbr_integer(t_dbl *tab_dbl)
 
 static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 {
-	int			minus;
+	int			minus = 0;
 
 	if (tab_dbl->last > tab_dbl->digits + 1)
 		tab_dbl->last = tab_dbl->digits + 1;
@@ -42,9 +42,11 @@ static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 	tab_dbl->digits = tab_dbl->head;
 	if (tab_dbl->head > tab_dbl->before_dot)
 		tab_dbl->head = tab_dbl->before_dot;
-	minus = (tab->arg.prec > 0 || (tab->arg.flag & HASH)) ? 1 : 0;
-	minus += (tab->arg.flag & SPACE) ? 1 : 0;
-	minus += (tab->arg.flag & PLUS) ? 1 : 0;
+	minus = (tab->arg.prec > 0) ? 1 : 0;
+	minus += (tab->arg.flag & SPACE && tab_dbl->sign == 0) ? 1 : 0;
+	minus += (tab->arg.flag & PLUS && tab_dbl->sign == 0) ? 1 : 0;
+	minus += (tab_dbl->sign == 1) ? 1 : 0;
+	minus += (tab->arg.prec == 0 && tab->arg.flag & HASH) ? 1 : 0;
 	tab->arg.larg -= 1 + tab_dbl->integer + tab->arg.prec + minus;
 	tab_dbl->digits = tab_dbl->head;
 	if (tab->arg.flag & ZERO)
@@ -95,7 +97,8 @@ void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab)
 	tab_dbl->rounding = *tab_dbl->digits % i;
 	if (tab_dbl->rounding && tab_dbl->digits + 1 != tab_dbl->last)
 	{
-		*tab_dbl->digits = (*tab_dbl->digits - tab_dbl->rounding) + i;
+		if (tab_dbl->rounding / (i / 10) >= 5)
+			*tab_dbl->digits = (*tab_dbl->digits - tab_dbl->rounding) + i;
 		while (*tab_dbl->digits > 999999999)
 		{
 			*tab_dbl->digits-- = 0;

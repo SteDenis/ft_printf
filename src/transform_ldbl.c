@@ -17,15 +17,12 @@ static long double	frxp(long double n, int *ex, t_dbl *tab_dbl, t_printf *tab)
 {
 	t_uniondbl	uni;
 
-	tab_dbl->sign = 0;
-	if (!n)
-		return ((long double)0);
-	if (n < 0)
-	{
-		tab_dbl->sign = 1;
-		n = -n;
-	}
 	uni.val = n;
+	tab_dbl->sign = (uni.t_binary.sign & 1) ? 1 : 0;
+	if (tab_dbl->sign == 1 && uni.val != 0)
+		uni.val = -uni.val;
+	if (uni.val == 0)
+		return ((long double)0);
 	if (uni.t_binary.exponent == 0x7FFF)
 	{
 		check_inf_or_nan(&uni, tab_dbl, tab);

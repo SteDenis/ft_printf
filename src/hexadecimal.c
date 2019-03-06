@@ -14,7 +14,7 @@
 
 static void before_or_after(uintmax_t value, t_printf *tab, char fill)
 {
-	while (!(tab->arg.flag & MINUS) && !(tab->arg.flag & ZERO) && tab->arg.larg-- > 0)
+	while (!(tab->arg.flag & (MINUS | ZERO)) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 	if (tab->arg.flag & HASH && value != 0)
 		fill_buffer('0', tab);
@@ -22,7 +22,7 @@ static void before_or_after(uintmax_t value, t_printf *tab, char fill)
 		fill_buffer('x', tab);
 	else if (tab->arg.type == XX && tab->arg.flag & HASH && value != 0)
 		fill_buffer('X', tab);
-	while (!(tab->arg.flag & MINUS) && !(tab->arg.flag & HASH) && tab->arg.larg-- > 0)
+	while (!(tab->arg.flag & MINUS) && (tab->arg.flag & ZERO) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }
 
@@ -34,8 +34,11 @@ static void	fill_hex(uintmax_t value, t_printf *tab, char fill)
 	before_or_after(value, tab, fill);
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
-	if (value == 0 && (tab->arg.flag & PREC) && prec > 0)
-		fill_buffer('0', tab);
+	if (value == 0)
+	{
+		if (((tab->arg.flag & PREC) && prec > 0) || !(tab->arg.flag & PREC))
+			fill_buffer('0', tab);
+	}
 	else if (tab->arg.type == X)
 		ft_putnbr_buffer_conv(value, tab, "0123456789abcdef");
 	else if (tab->arg.type == XX)
@@ -50,12 +53,15 @@ static void	prepare_hex(uintmax_t value, t_printf *tab)
 
 	len = int_length(value, 16);
 	if (tab->arg.flag & PREC)
+	{
+		tab->arg.flag &= ~(ZERO);
 		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
+	}
 	tab->arg.larg -= (value == 0) ? 0 : len;
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	if (tab->arg.flag & HASH && value != 0)
 		tab->arg.larg -= 2;
-	if (tab->arg.flag & ZERO)
+	if (tab->arg.flag & ZERO && !(tab->arg.flag & MINUS))
 		fill_hex(value, tab, '0');
 	else
 		fill_hex(value, tab, ' ');

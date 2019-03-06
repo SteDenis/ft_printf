@@ -19,6 +19,8 @@ static void	fill_oct(uintmax_t value, t_printf *tab, char fill)
 	print = true;
 	if (tab->arg.prec <= 0 && (tab->arg.flag & PREC))
 		print = false;
+	if (value == 0 && (tab->arg.flag & HASH) && tab->arg.prec == 1)
+		print = false;
 	if (!print && tab->arg.larg > 0 && value == 0)
 		tab->arg.larg++;
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
@@ -27,7 +29,7 @@ static void	fill_oct(uintmax_t value, t_printf *tab, char fill)
 		fill_buffer('0', tab);
 	if (value != 0)
 		ft_putnbr_buffer_conv(value, tab, "01234567");
-	else if (!(tab->arg.flag & HASH) && print)
+	else if (print)
 		fill_buffer('0', tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
@@ -44,10 +46,13 @@ static void	prepare_oct(uintmax_t value, t_printf *tab)
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	if (tab->arg.flag & HASH)
 	{
-		if ((tab->arg.prec <= 0 || value == 0) && (tab->arg.larg <= 0 || value == 0))
-			tab->arg.prec = (tab->arg.prec <= 0) ? 1 : tab->arg.prec + 1;
+		if (tab->arg.prec <= 0)
+		{
+			tab->arg.prec = (tab->arg.prec <= 0) ? 1 : tab->arg.prec;
+			tab->arg.larg--;
+		}
 	}
-	if (tab->arg.flag & ZERO)
+	if (tab->arg.flag & ZERO && !(tab->arg.flag & PREC) && !(tab->arg.flag & MINUS))
 		fill_oct(value, tab, '0');
 	else
 		fill_oct(value, tab, ' ');

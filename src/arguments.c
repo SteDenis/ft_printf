@@ -42,13 +42,13 @@ int 	arg_flags(t_printf *tab, const char *format)
 	if (format[tab->fmt] == '-')
 		tab->arg.flag = (tab->arg.flag | MINUS) & ~(ZERO);
 	else if (format[tab->fmt] == '+')
-	tab->arg.flag = (tab->arg.flag | PLUS) & ~(SPACE);
+		tab->arg.flag = (tab->arg.flag | PLUS) & ~(SPACE);
 	else if (format[tab->fmt] == '#')
-	tab->arg.flag = (tab->arg.flag | HASH);
-	else if (format[tab->fmt] == '0' && !(tab->arg.flag & MINUS))
-	tab->arg.flag = (tab->arg.flag | ZERO);
-	else if (format[tab->fmt] == ' ' && !(tab->arg.flag & PLUS))
-	tab->arg.flag = (tab->arg.flag | SPACE);
+		tab->arg.flag = (tab->arg.flag | HASH);
+	else if (format[tab->fmt] == '0')
+		tab->arg.flag = (tab->arg.flag | ZERO);
+	else if (format[tab->fmt] == ' ')
+		tab->arg.flag = (tab->arg.flag | SPACE);
 	else if (format[tab->fmt] == '.')
 	{
 		tab->arg.flag = (tab->arg.flag | PREC);
