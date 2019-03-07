@@ -45,11 +45,11 @@ static void	fill_integer(intmax_t value, t_printf *tab, char fill)
 	}
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
-	if (tab->arg.flag & SPACE && value >= 0)
+	if (value >= 0 && tab->arg.flag & SPACE)
 		fill_buffer(' ', tab);
-	if (tab->arg.flag & PLUS && value >= 0)
+	if (value >= 0 && tab->arg.flag & PLUS)
 		fill_buffer('+', tab);
-	if (value < 0)
+	else if (value < 0)
 		fill_buffer('-', tab);
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);

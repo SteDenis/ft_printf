@@ -40,9 +40,9 @@ static void	fill_hex(uintmax_t value, t_printf *tab, char fill)
 			fill_buffer('0', tab);
 	}
 	else if (tab->arg.type == X)
-		ft_putnbr_buffer_conv(value, tab, "0123456789abcdef");
+		ft_putnbr_buffer_conv(value, tab, "0123456789abcdef", 16);
 	else if (tab->arg.type == XX)
-		ft_putnbr_buffer_conv(value, tab, "0123456789ABCDEF");
+		ft_putnbr_buffer_conv(value, tab, "0123456789ABCDEF", 16);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }

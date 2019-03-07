@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:32:02 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 09:44:50 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 15:41:47 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	set_struct(t_printf *tab)
 {
+	tab->fmt ^= tab->fmt;
+	tab->buff ^= tab->buff;
+	tab->rtn ^= tab->rtn;
 	tab->dispatcher[0] = get_char;
 	tab->dispatcher[1] = get_string;
 	tab->dispatcher[2] = get_pointers;
@@ -23,6 +26,18 @@ void	set_struct(t_printf *tab)
 	tab->dispatcher[6] = check_hexadecimal;
 	tab->dispatcher[7] = check_hexadecimal;
 	tab->dispatcher[8] = check_float;
+	tab->arg.type ^= tab->arg.type;
+	tab->arg.larg ^= tab->arg.larg;
+	tab->arg.prec ^= tab->arg.prec;
+	tab->arg.flag ^= tab->arg.flag;
+}
+
+void	reset_arg(t_printf *tab)
+{
+	tab->arg.type ^= tab->arg.type;
+	tab->arg.larg ^= tab->arg.larg;
+	tab->arg.prec ^= tab->arg.prec;
+	tab->arg.flag ^= tab->arg.flag;
 }
 
 int		ft_printf(const char *format, ...)
@@ -33,8 +48,6 @@ int		ft_printf(const char *format, ...)
 	if (format == NULL)
 		return (1);
 	va_start(ap, format);
-	ft_memset(&tab, 0, sizeof(tab));
-	ft_memset(&tab.arg, 0, sizeof(tab.arg));
 	set_struct(&tab);
 	while (check_arg(format, &tab))
 	{
@@ -42,7 +55,7 @@ int		ft_printf(const char *format, ...)
 			check_string("%", &tab);
 		else
 			tab.dispatcher[tab.arg.type](ap, &tab);
-		ft_memset(&tab.arg, 0, sizeof(tab.arg));
+		reset_arg(&tab);
 	}
 	write(1, tab.buffer, tab.buff);
 	va_end(ap);

@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:55:31 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:19:58 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 20:11:05 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,38 @@ bool	check_flags(t_flags flag, int method, t_flags first, t_flags second)
 	return (false);
 }
 
-void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base)
+void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base, int blen)
 {
-	uintmax_t	base_l;
 	uintmax_t	rtn;
 
-	base_l = (uintmax_t)ft_strlen(base);
 	if (res > 0)
 	{
-		rtn = (res / base_l);
-		ft_putnbr_buffer_conv(rtn, tab, base);
+		if (blen == 8)
+			ft_putnbr_buffer_conv((res >> 3), tab, base, blen);
+		else if (blen == 16)
+			ft_putnbr_buffer_conv((res >> 4), tab, base, blen);
 	}
 	if (res != 0)
 	{
-		rtn = (res % base_l);
+		rtn = res & (blen - 1);
 		fill_buffer(base[rtn], tab);
 	}
 }
 
 void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
 {
+	uintmax_t mod;
+	uintmax_t p;
+
+	mod = 0;
+	p = 0;
 	if (res > 9)
 	{
-		ft_putnbr_buffer_pos(res / 10, tab);
-		fill_buffer((res % 10) + '0', tab);
+		mod = res / 10;
+		ft_putnbr_buffer_pos(mod, tab);
+		p = (mod << 3) + (mod << 1);
+		mod = res - p;
+		fill_buffer((mod) + '0', tab);
 	}
 	else
 		fill_buffer(res + '0', tab);
@@ -55,10 +63,18 @@ void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
 
 void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab)
 {
+	intmax_t mod;
+	intmax_t p;
+
+	mod = 0;
+	p = 0;
 	if (res < -9)
 	{
-		ft_putnbr_buffer_neg(res / 10, tab);
-		fill_buffer(-(res % 10) + '0', tab);
+		mod = res / 10;
+		ft_putnbr_buffer_neg(mod, tab);
+		p = (mod << 3) + (mod << 1);
+		mod = res - p;
+		fill_buffer(-(mod) + '0', tab);
 	}
 	else if (res <= 0)
 		fill_buffer((-res) + '0', tab);

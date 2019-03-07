@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:37:39 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:26:17 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 14:29:42 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 #include <stdint.h>
 #include "double.h"
 
-
-#include <stdio.h>
+#include <string.h>
 
 typedef unsigned int	t_flags;
 typedef void			(*t_fnc[9])	(va_list, void*);
@@ -59,7 +58,6 @@ typedef	struct			s_arg
 	int		type;
 	int		larg;
 	int		prec;
-	void	*value;
 	t_flags	flag;
 }						t_arg;
 
@@ -140,7 +138,7 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab);
 */
 void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab);
-void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base);
+void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base, int blen);
 bool	check_flags(t_flags flag, int method, t_flags first, t_flags second);
 
 /*
@@ -153,7 +151,6 @@ int		ft_printf(const char *format, ...);
 */
 void					*ft_memset(void *b, int c, size_t n);
 size_t					ft_strlen(const char *str);
-void					ft_putstr(char const *s);
 int						get_size_flag(t_printf *tab, const char *str, int prec);
 int						int_length(intmax_t value, int base);
 #endif

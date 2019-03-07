@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:58:57 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 17:07:18 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 14:37:31 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,9 @@ void	*ft_memset(void *b, int c, size_t n)
 {
 	size_t			i;
 
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char*)b)[i] = (unsigned char)c;
-		i++;
-	}
+	i = -1;
+	while (++i < n)
+		((unsigned char*)b)[i] = c;
 	return (b);
 }
 
@@ -82,17 +79,4 @@ size_t	ft_strlen(const char *str)
 		i++;
 	}
 	return (i);
-}
-
-void	ft_putstr(char const *s)
-{
-	int i;
-
-	i = 0;
-	if (s != NULL)
-		while (s[i] != '\0')
-		{
-			write(1, &s[i], 1);
-			i++;
-		}
 }

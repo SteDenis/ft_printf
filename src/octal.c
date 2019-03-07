@@ -28,7 +28,7 @@ static void	fill_oct(uintmax_t value, t_printf *tab, char fill)
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
 	if (value != 0)
-		ft_putnbr_buffer_conv(value, tab, "01234567");
+		ft_putnbr_buffer_conv(value, tab, "01234567", 8);
 	else if (print)
 		fill_buffer('0', tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
