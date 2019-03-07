@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:17:40 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 19:09:39 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:30:03 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,17 @@ static void	prepare_oct(uintmax_t value, t_printf *tab)
 			tab->arg.larg--;
 		}
 	}
-	if (tab->arg.flag & ZERO && !(tab->arg.flag & PREC) && !(tab->arg.flag & MINUS))
+	if (check_flags(tab->arg.flag, 2, ZERO, PREC) && !(tab->arg.flag & MINUS))
 		fill_oct(value, tab, '0');
 	else
 		fill_oct(value, tab, ' ');
 }
 
-void	check_octal(va_list ap, t_printf *tab)
+void	check_octal(va_list ap, void *ptr)
 {
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
 	if (tab->arg.flag & H)
 		prepare_oct((unsigned short int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & HH)
@@ -68,6 +71,10 @@ void	check_octal(va_list ap, t_printf *tab)
 		prepare_oct((unsigned long int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & LL)
 		prepare_oct((unsigned long long int)va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & J)
+		prepare_oct(va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & Z)
+		prepare_oct((size_t)va_arg(ap, uintmax_t), tab);
 	else
 		prepare_oct((unsigned int)va_arg(ap, uintmax_t), tab);
 }

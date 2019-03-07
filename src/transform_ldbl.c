@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 14:55:36 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 18:26:41 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:27:56 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ static void			h_ldbl_pos(t_dbl *tab_dbl, t_printf *tab, int exponent)
 			tab_dbl->last--;
 		exponent -= power;
 	}
+	calculate_nbr_integer(tab_dbl);
 	rounding_ldbl(tab_dbl, tab);
 }
 
@@ -107,6 +108,7 @@ static void			h_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 		re_positioning_pointers(tab_dbl, last, decal);
 		exponent += power;
 	}
+	calculate_nbr_integer(tab_dbl);
 	rounding_ldbl(tab_dbl, tab);
 }
 

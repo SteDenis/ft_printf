@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 15:16:42 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 19:03:01 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:34:55 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,19 @@ static void	prepare_int(intmax_t value, t_printf *tab)
 		fill_integer(value, tab, ' ');
 }
 
-void		check_integer(va_list ap, t_printf *tab)
+void		check_integer(va_list ap, void *ptr)
 {
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
 	if (tab->arg.flag & H)
 		prepare_int((short int)va_arg(ap, intmax_t), tab);
 	else if (tab->arg.flag & HH)
 		prepare_int((char)va_arg(ap, intmax_t), tab);
+	else if (tab->arg.flag & J)
+		prepare_int(va_arg(ap, intmax_t), tab);
+	else if (tab->arg.flag & Z)
+		prepare_int((long int)va_arg(ap, intmax_t), tab);
 	else if (tab->arg.flag & L)
 		prepare_int((long int)va_arg(ap, intmax_t), tab);
 	else if (tab->arg.flag & LL)

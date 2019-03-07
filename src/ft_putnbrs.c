@@ -6,12 +6,23 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:55:31 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 19:09:39 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:19:58 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_printf.h"
+
+bool	check_flags(t_flags flag, int method, t_flags first, t_flags second)
+{
+	if (method == 1 && (flag & (first | second)))
+		return (true);
+	else if (method == 2 && (flag & first) && !(flag & second))
+		return (true);
+	else if (method == 3 && !(flag & (first | second)))
+		return (true);
+	return (false);
+}
 
 void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base)
 {

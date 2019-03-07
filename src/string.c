@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:03 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/25 14:55:32 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:41:51 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	fill_with_string(const char *value, t_printf *tab, size_t len)
+static void	fill_with_string(const char *value, t_printf *tab, size_t len)
 {
 	size_t		i;
 
@@ -43,4 +43,12 @@ void	check_string(const char *value, t_printf *tab)
 		tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
 		fill_with_string(value, tab, len);
 	}
+}
+
+void	get_string(va_list ap, void *ptr)
+{
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
+	check_string(va_arg(ap, char *), tab);
 }

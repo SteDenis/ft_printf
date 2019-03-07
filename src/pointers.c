@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 14:11:34 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 15:40:47 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:41:51 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	fill_pointers(void *value, t_printf *tab)
+static void	fill_pointers(void *value, t_printf *tab)
 {
 	bool		prec;
 
@@ -31,7 +31,7 @@ void	fill_pointers(void *value, t_printf *tab)
 		fill_buffer(' ', tab);
 }
 
-void	check_pointers(void *value, t_printf *tab)
+static void	check_pointers(void *value, t_printf *tab)
 {
 	int		len;
 
@@ -41,4 +41,12 @@ void	check_pointers(void *value, t_printf *tab)
 	tab->arg.larg -= len + 2;
 	tab->arg.larg -= (tab->arg.prec > 0) ? tab->arg.prec : 0;
 	fill_pointers(value, tab);
+}
+
+void	get_pointers(va_list ap, void *ptr)
+{
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
+	check_pointers(va_arg(ap, void *), tab);
 }

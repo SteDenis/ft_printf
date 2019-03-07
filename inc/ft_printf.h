@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:37:39 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 18:22:03 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:26:17 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 
 #include <stdio.h>
 
-typedef unsigned int	flags;
-typedef void			(*t_fnc[4])	(va_list, void*);
+typedef unsigned int	t_flags;
+typedef void			(*t_fnc[9])	(va_list, void*);
 
 enum {
 	HASH = 0x01,
@@ -36,7 +36,9 @@ enum {
 	H = 0x80,
 	LL = 0x100,
 	L = 0x200,
-	LDBL = 0x400
+	LDBL = 0x400,
+	Z = 0x800,
+	J = 0x1000,
 };
 
 enum {
@@ -48,8 +50,8 @@ enum {
 	U = 5,
 	X = 6,
 	XX = 7,
-	PERCENT = 8,
-	F = 9
+	F = 8,
+	PERCENT = 9
 };
 
 typedef	struct			s_arg
@@ -58,7 +60,7 @@ typedef	struct			s_arg
 	int		larg;
 	int		prec;
 	void	*value;
-	flags	flag;
+	t_flags	flag;
 }						t_arg;
 
 typedef struct			s_printf
@@ -84,39 +86,40 @@ int 	check_arg(const char *format, t_printf *tab);
 /*
 ** string.c
 */
-void	fill_with_string(const char *value, t_printf *tab, size_t len);
 void	check_string(const char *value, t_printf *tab);
+void	get_string(va_list ap, void *ptr);
 
 /*
 ** char.c
 */
-void	check_char(const char value, t_printf *tab);
+void	get_char(va_list ap, void *ptr);
 
 /*
 ** integer.c
 */
-void	check_integer(va_list ap, t_printf *tab);
-void	check_unsigned_integer(va_list ap, t_printf *tab);
+void	check_integer(va_list ap, void *ptr);
+void	check_unsigned_integer(va_list ap, void *ptr);
+void		prepare_un(uintmax_t value, t_printf *tab);
 
 /*
 ** hexadecimal.c
 */
-void	check_hexadecimal(va_list ap, t_printf *tab);
+void	check_hexadecimal(va_list ap, void *ptr);
 
 /*
 ** octal.c
 */
-void	check_octal(va_list ap, t_printf *tab);
+void	check_octal(va_list ap, void *ptr);
 
 /*
 ** pointers.c
 */
-void	check_pointers(void *value, t_printf *tab);
+void	get_pointers(va_list ap, void *ptr);
 
 /*
 ** double.c
 */
-int			check_float(va_list ap, t_printf *tab);
+void			check_float(va_list ap, void *ptr);
 void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill);
 
 /*
@@ -125,6 +128,7 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill);
 void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab);
 void		re_positioning_pointers(t_dbl *tab_dbl, uint32_t last, int decal);
 void		check_inf_or_nan(t_uniondbl *uni, t_dbl *tab_dbl, t_printf *tab);
+void		calculate_nbr_integer(t_dbl *tab_dbl);
 
 /*
 ** transform_ldbl.c
@@ -137,6 +141,7 @@ void		transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab);
 void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab);
 void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base);
+bool	check_flags(t_flags flag, int method, t_flags first, t_flags second);
 
 /*
 ** ft_printf.c

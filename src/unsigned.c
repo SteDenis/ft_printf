@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 19:00:26 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 19:03:01 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:30:47 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	fill_unsigned(uintmax_t value, t_printf *tab, char fill)
 		fill_buffer(fill, tab);
 }
 
-static void	prepare_un(uintmax_t value, t_printf *tab)
+void		prepare_un(uintmax_t value, t_printf *tab)
 {
 	int		len;
 
@@ -63,8 +63,11 @@ static void	prepare_un(uintmax_t value, t_printf *tab)
 		fill_unsigned(value, tab, ' ');
 }
 
-void		check_unsigned_integer(va_list ap, t_printf *tab)
+void		check_unsigned_integer(va_list ap, void *ptr)
 {
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
 	if (tab->arg.flag & H)
 		prepare_un((unsigned short int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & HH)
@@ -73,6 +76,10 @@ void		check_unsigned_integer(va_list ap, t_printf *tab)
 		prepare_un((unsigned long int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & LL)
 		prepare_un((unsigned long long int)va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & J)
+		prepare_un(va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & Z)
+		prepare_un((size_t)va_arg(ap, uintmax_t), tab);
 	else
 		prepare_un((unsigned int)va_arg(ap, uintmax_t), tab);
 }

@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 12:45:26 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 15:56:46 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:23:02 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,17 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
 	size_t	len;
 
 	len = 0;
-	if ((tab->arg.flag & PLUS) && (tab->arg.flag & ZERO) && tab_dbl->sign == 0)
+	if ((tab->arg.flag & (PLUS | ZERO)) && tab_dbl->sign == 0)
 		fill_buffer('+', tab);
-	if (tab->arg.flag & SPACE && (tab->arg.flag & ZERO) && tab_dbl->sign == 0)
+	if ((tab->arg.flag & (SPACE | ZERO)) && tab_dbl->sign == 0)
 		fill_buffer(' ', tab);
 	if ((tab->arg.flag & ZERO) && tab_dbl->sign == 1)
 		fill_buffer('-', tab);
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
-	if (tab->arg.flag & SPACE && !(tab->arg.flag & ZERO)  && tab_dbl->sign == 0)
+	if (check_flags(tab->arg.flag, 2, SPACE, ZERO)  && tab_dbl->sign == 0)
 		fill_buffer(' ', tab);
-	if (tab->arg.flag & PLUS && !(tab->arg.flag & ZERO) && tab_dbl->sign == 0)
+	if (check_flags(tab->arg.flag, 2, PLUS, ZERO) && tab_dbl->sign == 0)
 		fill_buffer('+', tab);
 	if (tab_dbl->sign == 1 && !(tab->arg.flag & ZERO))
 		fill_buffer('-', tab);
@@ -88,11 +88,13 @@ void		printing_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill)
 		fill_buffer(fill, tab);
 }
 
-int			check_float(va_list ap, t_printf *tab)
+void		check_float(va_list ap, void *ptr)
 {
 	t_dbl			tab_dbl;
 	unsigned int	check;
+	t_printf *tab;
 
+	tab = (t_printf*)ptr;
 	check = 0;
 	if (!(tab->arg.flag & PREC))
 		tab->arg.prec = 6;
@@ -123,5 +125,4 @@ int			check_float(va_list ap, t_printf *tab)
 		}*/
 	}
 	transform_ldbl_80b(&tab_dbl, tab);
-	return (0);
 }

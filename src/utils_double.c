@@ -6,30 +6,12 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 09:22:38 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 18:49:11 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:27:56 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "double.h"
-
-static void	calculate_nbr_integer(t_dbl *tab_dbl)
-{
-	unsigned int	i;
-
-	i = 10;
-	if (tab_dbl->head < tab_dbl->last)
-	{
-		tab_dbl->integer = 9 * (tab_dbl->before_dot - tab_dbl->head);
-		while (*tab_dbl->head >= i)
-		{
-			tab_dbl->integer++;
-			i *= 10;
-		}
-	}
-	else
-		tab_dbl->integer = 0;
-}
 
 static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 {
@@ -53,6 +35,24 @@ static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 		printing_flags_ldbl(tab_dbl, tab, '0');
 	else
 		printing_flags_ldbl(tab_dbl, tab, ' ');
+}
+
+void	calculate_nbr_integer(t_dbl *tab_dbl)
+{
+	unsigned int	i;
+
+	i = 10;
+	if (tab_dbl->head < tab_dbl->last)
+	{
+		tab_dbl->integer = 9 * (tab_dbl->before_dot - tab_dbl->head);
+		while (*tab_dbl->head >= i)
+		{
+			tab_dbl->integer++;
+			i *= 10;
+		}
+	}
+	else
+		tab_dbl->integer = 0;
 }
 
 void		check_inf_or_nan(t_uniondbl *uni, t_dbl *tab_dbl, t_printf *tab)
@@ -87,7 +87,6 @@ void		rounding_ldbl(t_dbl *tab_dbl, t_printf *tab)
 	int			j;
 	int			i;
 
-	calculate_nbr_integer(tab_dbl);
 	prec = (tab->arg.prec > 10000) ? 10000 : tab->arg.prec;
 	tab_dbl->digits = tab_dbl->before_dot + 1 + (prec / 9);
 	j = ((tab->arg.prec) % 9) + 1;

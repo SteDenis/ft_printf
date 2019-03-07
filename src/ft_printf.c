@@ -6,11 +6,24 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:32:02 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/28 11:47:15 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:44:50 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+void	set_struct(t_printf *tab)
+{
+	tab->dispatcher[0] = get_char;
+	tab->dispatcher[1] = get_string;
+	tab->dispatcher[2] = get_pointers;
+	tab->dispatcher[3] = check_integer;
+	tab->dispatcher[4] = check_octal;
+	tab->dispatcher[5] = check_unsigned_integer;
+	tab->dispatcher[6] = check_hexadecimal;
+	tab->dispatcher[7] = check_hexadecimal;
+	tab->dispatcher[8] = check_float;
+}
 
 int		ft_printf(const char *format, ...)
 {
@@ -22,26 +35,13 @@ int		ft_printf(const char *format, ...)
 	va_start(ap, format);
 	ft_memset(&tab, 0, sizeof(tab));
 	ft_memset(&tab.arg, 0, sizeof(tab.arg));
+	set_struct(&tab);
 	while (check_arg(format, &tab))
 	{
-		if (tab.arg.type == S)
-			check_string(va_arg(ap, char *), &tab);
-		else if (tab.arg.type == C)
-			check_char((char)va_arg(ap, int), &tab);
-		else if (tab.arg.type == DI)
-			check_integer(ap, &tab);
-		else if (tab.arg.type == U)
-			check_unsigned_integer(ap, &tab);
-		else if (tab.arg.type == PERCENT)
+		if (tab.arg.type == PERCENT)
 			check_string("%", &tab);
-		else if (tab.arg.type == P)
-			check_pointers(va_arg(ap, void *), &tab);
-		else if (tab.arg.type == XX || tab.arg.type == X)
-			check_hexadecimal(ap, &tab);
-		else if (tab.arg.type == F)
-			check_float(ap, &tab);
-		else if (tab.arg.type == O)
-			check_octal(ap, &tab);
+		else
+			tab.dispatcher[tab.arg.type](ap, &tab);
 		ft_memset(&tab.arg, 0, sizeof(tab.arg));
 	}
 	write(1, tab.buffer, tab.buff);

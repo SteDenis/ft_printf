@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 15:01:04 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 10:55:17 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 09:43:20 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	fill_with_char(const char value, t_printf *tab)
+static void	fill_with_char(const char value, t_printf *tab)
 {
 	size_t		i;
 
@@ -24,7 +24,7 @@ void	fill_with_char(const char value, t_printf *tab)
 		fill_buffer(' ', tab);
 }
 
-void	check_char(const char value, t_printf *tab)
+static void	check_char(const char value, t_printf *tab)
 {
 	size_t		len;
 
@@ -33,4 +33,12 @@ void	check_char(const char value, t_printf *tab)
 		len = ((int)len < tab->arg.prec) ? 1 : tab->arg.prec;
 	tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
 	fill_with_char(value, tab);
+}
+
+void	get_char(va_list ap, void *ptr)
+{
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
+	check_char((char)va_arg(ap, int), tab);
 }

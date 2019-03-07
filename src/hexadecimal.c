@@ -6,13 +6,13 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:44:55 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 19:37:24 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/07 10:30:03 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void before_or_after(uintmax_t value, t_printf *tab, char fill)
+static void	before_or_after(uintmax_t value, t_printf *tab, char fill)
 {
 	while (!(tab->arg.flag & (MINUS | ZERO)) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
@@ -22,7 +22,7 @@ static void before_or_after(uintmax_t value, t_printf *tab, char fill)
 		fill_buffer('x', tab);
 	else if (tab->arg.type == XX && tab->arg.flag & HASH && value != 0)
 		fill_buffer('X', tab);
-	while (!(tab->arg.flag & MINUS) && (tab->arg.flag & ZERO) && tab->arg.larg-- > 0)
+	while (check_flags(tab->arg.flag, 2, ZERO, MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }
 
@@ -67,8 +67,11 @@ static void	prepare_hex(uintmax_t value, t_printf *tab)
 		fill_hex(value, tab, ' ');
 }
 
-void	check_hexadecimal(va_list ap, t_printf *tab)
+void		check_hexadecimal(va_list ap, void *ptr)
 {
+	t_printf *tab;
+
+	tab = (t_printf*)ptr;
 	if (tab->arg.flag & H)
 		prepare_hex((unsigned short int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & HH)
@@ -77,6 +80,10 @@ void	check_hexadecimal(va_list ap, t_printf *tab)
 		prepare_hex((unsigned long int)va_arg(ap, uintmax_t), tab);
 	else if (tab->arg.flag & LL)
 		prepare_hex((unsigned long long int)va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & J)
+		prepare_hex(va_arg(ap, uintmax_t), tab);
+	else if (tab->arg.flag & Z)
+		prepare_hex((size_t)va_arg(ap, uintmax_t), tab);
 	else
 		prepare_hex((unsigned int)va_arg(ap, uintmax_t), tab);
 }
