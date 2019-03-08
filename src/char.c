@@ -14,9 +14,6 @@
 
 static void	fill_with_char(const unsigned char value, t_printf *tab, char fill)
 {
-	size_t		i;
-
-	i = -1;
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 	fill_buffer(value, tab);

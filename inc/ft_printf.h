@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/08 18:07:09 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 18:18:10 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 19:19:28 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <wchar.h>
 # include "double.h"
 
 enum {
@@ -44,11 +45,13 @@ enum {
 	X = 6,
 	XX = 7,
 	F = 8,
-	PERCENT = 9
+	SS = 9,
+	CC = 10,
+	PERCENT = 11
 };
 
 typedef uint16_t	t_flags;
-typedef void		(*t_fnc[9])	(va_list ap, void *tab);
+typedef void		(*t_fnc[11])	(va_list ap, void *tab);
 
 typedef	struct		s_arg
 {
@@ -144,6 +147,19 @@ int					uint_length(uintmax_t value, int base);
 ** ft_printf.c
 */
 int					ft_printf(const char *format, ...);
+
+/*
+** unicode.c
+*/
+void				get_char_uni(va_list ap, void *ptr);
+void				get_string_uni(va_list ap, void *ptr);
+
+/*
+** utils_unicode.c
+*/
+
+size_t				len_octects(const wchar_t c);
+size_t				ft_strlen_unicode(const wchar_t *str);
 
 /*
 ** utils.c

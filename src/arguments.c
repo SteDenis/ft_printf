@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 18:36:42 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 20:03:19 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int		arg_printf(t_printf *tab, char c)
 {
-	if (c == 's' && ++tab->fmt)
+	if (!(tab->arg.flag & L) && c == 's' && ++tab->fmt)
 		tab->arg.type = S;
+	else if ((c == 'S'  && ++tab->fmt) || ((tab->arg.flag & L) && c == 's' && ++tab->fmt))
+		tab->arg.type = SS;
 	else if ((c == 'd' || c == 'i') && ++tab->fmt)
 		tab->arg.type = DI;
 	else if (c == 'x' && ++tab->fmt)
@@ -28,8 +30,10 @@ int		arg_printf(t_printf *tab, char c)
 		tab->arg.type = U;
 	else if (c == 'p' && ++tab->fmt)
 		tab->arg.type = P;
-	else if (c == 'c' && ++tab->fmt)
+	else if (!(tab->arg.flag & L) && c == 'c' && ++tab->fmt)
 		tab->arg.type = C;
+	else if ((c == 'C' && ++tab->fmt) || ((tab->arg.flag & L) && c == 'c' && ++tab->fmt))
+		tab->arg.type = CC;
 	else if (c == 'f' && ++tab->fmt)
 		tab->arg.type = F;
 	else if (c == '%' && ++tab->fmt)
