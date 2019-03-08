@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:58:57 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 16:51:24 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:48:30 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		get_size_flag(t_printf *tab, const char *str, int prec)
 		value = 10 * value + (str[i] - '0');
 		i++;
 	}
-	if (i > 0)
+	if (i > 0 || (tab->arg.prec > 0 && prec == 1))
 	{
 		if (prec == 1)
 		{

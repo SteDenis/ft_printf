@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 17:39:55 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:36:42 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int		arg_printf(t_printf *tab, char c)
 		tab->arg.type = F;
 	else if (c == '%' && ++tab->fmt)
 		tab->arg.type = PERCENT;
+	else
+		tab->arg.type = 999;
 	if (c == 'U')
 		tab->arg.flag = (tab->arg.flag | L) & ~(H);
 	return (1);
@@ -50,7 +52,7 @@ int		conv_flags(t_printf *tab, const char *format)
 		if (tab->arg.flag & L)
 			tab->arg.flag = (tab->arg.flag | LL) & ~(L);
 		else
-			tab->arg.flag = (tab->arg.flag | L);
+			tab->arg.flag = (tab->arg.flag | L) & ~(H) & ~(HH);
 	else if (format[tab->fmt] == 'L')
 		tab->arg.flag = (tab->arg.flag | LDBL);
 	else if (format[tab->fmt] == 'j')

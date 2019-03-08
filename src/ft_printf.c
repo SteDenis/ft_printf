@@ -53,7 +53,7 @@ int		ft_printf(const char *format, ...)
 	{
 		if (tab.arg.type == PERCENT)
 			check_string("%", &tab);
-		else
+		else if (tab.arg.type != 999)
 			tab.dispatcher[tab.arg.type](ap, &tab);
 		reset_arg(&tab);
 	}

@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 15:16:42 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 18:17:10 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:40:25 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void		check_integer(va_list ap, void *ptr)
 	t_printf *tab;
 
 	tab = (t_printf*)ptr;
-	if (tab->arg.flag & H)
+	if (tab->arg.flag & H && !(tab->arg.flag & Z) && !(tab->arg.flag & J))
 		prepare_int((short int)va_arg(ap, intmax_t), tab);
 	else if (tab->arg.flag & HH)
 		prepare_int((char)va_arg(ap, intmax_t), tab);
