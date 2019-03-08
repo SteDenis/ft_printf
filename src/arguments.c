@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:00:13 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:39:55 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,28 @@
 
 int		arg_printf(t_printf *tab, char c)
 {
-	if (c == 's')
+	if (c == 's' && ++tab->fmt)
 		tab->arg.type = S;
-	else if (c == 'd' || c == 'i')
+	else if ((c == 'd' || c == 'i') && ++tab->fmt)
 		tab->arg.type = DI;
-	else if (c == 'x')
+	else if (c == 'x' && ++tab->fmt)
 		tab->arg.type = X;
-	else if (c == 'X')
+	else if (c == 'X' && ++tab->fmt)
 		tab->arg.type = XX;
-	else if (c == 'o')
+	else if (c == 'o' && ++tab->fmt)
 		tab->arg.type = O;
-	else if (c == 'u')
+	else if ((c == 'u' || c == 'U') && ++tab->fmt)
 		tab->arg.type = U;
-	else if (c == 'p')
+	else if (c == 'p' && ++tab->fmt)
 		tab->arg.type = P;
-	else if (c == 'c')
+	else if (c == 'c' && ++tab->fmt)
 		tab->arg.type = C;
-	else if (c == 'f')
+	else if (c == 'f' && ++tab->fmt)
 		tab->arg.type = F;
-	else if (c == '%')
+	else if (c == '%' && ++tab->fmt)
 		tab->arg.type = PERCENT;
+	if (c == 'U')
+		tab->arg.flag = (tab->arg.flag | L) & ~(H);
 	return (1);
 }
 
@@ -93,15 +95,15 @@ int		check_arg(const char *format, t_printf *tab)
 			mode = 1;
 		if (mode == 0)
 			fill_buffer(format[tab->fmt++], tab);
-		else
+		else if (format[tab->fmt] != '\0')
 		{
-			if (arg_flags(tab, format))
+			if (format[tab->fmt] != '\0' && arg_flags(tab, format))
 				++tab->fmt;
-			else if (conv_flags(tab, format))
+			else if (format[tab->fmt] != '\0' && conv_flags(tab, format))
 				++tab->fmt;
 			else if (get_size_flag(tab, &format[tab->fmt], 0))
 				++tab->fmt;
-			else if (arg_printf(tab, format[tab->fmt]) && ++tab->fmt)
+			else if (arg_printf(tab, format[tab->fmt]))
 				return (1);
 		}
 	}

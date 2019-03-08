@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:17:40 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:30:03 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 17:58:45 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	fill_oct(uintmax_t value, t_printf *tab, char fill)
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
 	if (value != 0)
-		ft_putnbr_buffer_conv(value, tab, "01234567", 8);
+		putnbr_c(value, tab, "01234567", 8);
 	else if (print)
 		fill_buffer('0', tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
@@ -39,7 +39,7 @@ static void	prepare_oct(uintmax_t value, t_printf *tab)
 {
 	int		len;
 
-	len = int_length(value, 8);
+	len = uint_length(value, 8);
 	if (tab->arg.flag & PREC)
 		tab->arg.prec = (len < tab->arg.prec) ? tab->arg.prec - len : 0;
 	tab->arg.larg -= len;
@@ -58,7 +58,7 @@ static void	prepare_oct(uintmax_t value, t_printf *tab)
 		fill_oct(value, tab, ' ');
 }
 
-void	check_octal(va_list ap, void *ptr)
+void		check_octal(va_list ap, void *ptr)
 {
 	t_printf *tab;
 

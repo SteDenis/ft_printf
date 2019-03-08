@@ -10,18 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   integer.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/25 15:16:42 by stdenis           #+#    #+#             */
-/*   Updated: 2019/02/26 16:28:19 by stdenis          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdint.h>
 #include "ft_printf.h"
 
@@ -40,7 +28,7 @@ static void	fill_unsigned(uintmax_t value, t_printf *tab, char fill)
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
 	if (print)
-		ft_putnbr_buffer_pos(value, tab);
+		putnbr_p(value, tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }
@@ -49,7 +37,7 @@ void		prepare_un(uintmax_t value, t_printf *tab)
 {
 	int		len;
 
-	len = int_length(value, 10);
+	len = uint_length(value, 10);
 	if (tab->arg.flag & PREC)
 	{
 		tab->arg.flag &= ~(ZERO);

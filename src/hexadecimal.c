@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:44:55 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:30:03 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:03:56 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static void	fill_hex(uintmax_t value, t_printf *tab, char fill)
 			fill_buffer('0', tab);
 	}
 	else if (tab->arg.type == X)
-		ft_putnbr_buffer_conv(value, tab, "0123456789abcdef", 16);
+		putnbr_c(value, tab, "0123456789abcdef", 16);
 	else if (tab->arg.type == XX)
-		ft_putnbr_buffer_conv(value, tab, "0123456789ABCDEF", 16);
+		putnbr_c(value, tab, "0123456789ABCDEF", 16);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }
@@ -51,7 +51,7 @@ static void	prepare_hex(uintmax_t value, t_printf *tab)
 {
 	int		len;
 
-	len = int_length(value, 16);
+	len = uint_length(value, 16);
 	if (tab->arg.flag & PREC)
 	{
 		tab->arg.flag &= ~(ZERO);

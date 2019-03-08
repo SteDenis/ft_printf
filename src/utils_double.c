@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 09:22:38 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 09:27:56 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:15:33 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 {
-	int			minus = 0;
+	int			minus;
 
 	if (tab_dbl->last > tab_dbl->digits + 1)
 		tab_dbl->last = tab_dbl->digits + 1;
@@ -31,13 +31,15 @@ static void	prepare_print(t_dbl *tab_dbl, t_printf *tab)
 	minus += (tab->arg.prec == 0 && tab->arg.flag & HASH) ? 1 : 0;
 	tab->arg.larg -= 1 + tab_dbl->integer + tab->arg.prec + minus;
 	tab_dbl->digits = tab_dbl->head;
+	if (tab->arg.flag & PLUS)
+		tab->arg.flag &= ~(SPACE);
 	if (tab->arg.flag & ZERO)
-		printing_flags_ldbl(tab_dbl, tab, '0');
+		print_flags_ldbl(tab_dbl, tab, '0');
 	else
-		printing_flags_ldbl(tab_dbl, tab, ' ');
+		print_flags_ldbl(tab_dbl, tab, ' ');
 }
 
-void	calculate_nbr_integer(t_dbl *tab_dbl)
+void		calculate_nbr_integer(t_dbl *tab_dbl)
 {
 	unsigned int	i;
 
@@ -55,20 +57,32 @@ void	calculate_nbr_integer(t_dbl *tab_dbl)
 		tab_dbl->integer = 0;
 }
 
-void		check_inf_or_nan(t_uniondbl *uni, t_dbl *tab_dbl, t_printf *tab)
+void		print_others(t_dbl *tab_dbl, int check, t_printf *tab)
 {
-	if (uni->t_binary.mantissa1 == 0x80000000 && uni->t_binary.mantissa2 == 0x0)
-	{
-		if (tab_dbl->sign == 1)
-			check_string("-inf", tab);
-		else
-			check_string("inf", tab);
-	}
-	else
+	int		minus;
+
+	if (check == 4 && tab_dbl->sign == 1)
+		check_string("-inf", tab);
+	else if (check == 4 && tab_dbl->sign == 0)
+		check_string("inf", tab);
+	else if (check == 3)
 		check_string("nan", tab);
+	else
+	{
+		minus = (tab->arg.prec > 0) ? 1 : 0;
+		minus += (tab->arg.flag & SPACE && tab_dbl->sign == 0) ? 1 : 0;
+		minus += (tab->arg.flag & PLUS && tab_dbl->sign == 0) ? 1 : 0;
+		minus += (tab_dbl->sign == 1) ? 1 : 0;
+		minus += (tab->arg.prec == 0 && tab->arg.flag & HASH) ? 1 : 0;
+		tab->arg.larg -= 1 + minus + tab->arg.prec;
+		if (tab->arg.flag & ZERO)
+			print_zero(tab, '0', tab_dbl);
+		else
+			print_zero(tab, ' ', tab_dbl);
+	}
 }
 
-void		re_positioning_pointers(t_dbl *tab_dbl, uint32_t last, int decal)
+void		repos_pointers(t_dbl *tab_dbl, uint32_t last, int decal)
 {
 	uint32_t	*ptr;
 

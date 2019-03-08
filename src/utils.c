@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:58:57 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 14:37:31 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 16:51:24 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		get_size_flag(t_printf *tab, const char *str, int prec)
 
 	i = 0;
 	value = 0;
-	while ((str[i] >= '0' && str[i] <= '9'))
+	while (*str && (str[i] >= '0' && str[i] <= '9'))
 	{
 		value = 10 * value + (str[i] - '0');
 		i++;
@@ -79,4 +79,27 @@ size_t	ft_strlen(const char *str)
 		i++;
 	}
 	return (i);
+}
+
+void	rounding_prec_zero(t_dbl *tab_dbl, t_printf *tab)
+{
+	size_t	len;
+	int		last;
+
+	last = 0;
+	tab_dbl->before_dot++;
+	if (*tab_dbl->before_dot > 0)
+	{
+		len = int_length(*tab_dbl->before_dot, 10);
+		if (len >= 9 && *tab_dbl->before_dot % 100000000 != 0)
+		{
+			while (len-- > 1)
+				*tab_dbl->before_dot /= 10;
+			if (*tab_dbl->before_dot >= 5)
+			{
+				last = tab->buffer[tab->buff - 1] - '0' + 1;
+				tab->buffer[tab->buff - 1] = last + '0';
+			}
+		}
+	}
 }

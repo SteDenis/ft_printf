@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 12:53:48 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/05 18:15:28 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 14:42:35 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@ typedef union		u_uniondbl
 		unsigned	empty : 16;
 	}				t_binary;
 }					t_uniondbl;
+
+typedef union		u_binary
+{
+	long double		val;
+	struct			s_bits
+	{
+		uint64_t	mantissa;
+		uint16_t	exposign;
+	}				t_bits;
+}					t_binary;
 
 typedef struct		s_dbl
 {

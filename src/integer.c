@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 15:16:42 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 10:34:55 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:17:10 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static void	fill_integer_zero(intmax_t value, t_printf *tab, char fill)
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
 	if (value < 0)
-		ft_putnbr_buffer_neg(value, tab);
+		putnbr_n(value, tab);
 	else
-		ft_putnbr_buffer_pos(value, tab);
+		putnbr_p(value, tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }
@@ -54,9 +54,9 @@ static void	fill_integer(intmax_t value, t_printf *tab, char fill)
 	while (tab->arg.prec-- > 0)
 		fill_buffer('0', tab);
 	if (print && value < 0)
-		ft_putnbr_buffer_neg(value, tab);
+		putnbr_n(value, tab);
 	else if (print)
-		ft_putnbr_buffer_pos(value, tab);
+		putnbr_p(value, tab);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 		fill_buffer(fill, tab);
 }

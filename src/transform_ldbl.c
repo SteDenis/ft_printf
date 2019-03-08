@@ -6,14 +6,14 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 14:55:36 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 09:27:56 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 14:43:20 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "double.h"
 
-static long double	frxp(long double n, int *ex, t_dbl *tab_dbl, t_printf *tab)
+static long double	frxp(long double n, int *ex, t_dbl *tab_dbl)
 {
 	t_uniondbl	uni;
 
@@ -23,11 +23,6 @@ static long double	frxp(long double n, int *ex, t_dbl *tab_dbl, t_printf *tab)
 		uni.val = -uni.val;
 	if (uni.val == 0)
 		return ((long double)0);
-	if (uni.t_binary.exponent == 0x7FFF)
-	{
-		check_inf_or_nan(&uni, tab_dbl, tab);
-		return ((long double)-1);
-	}
 	*ex = uni.t_binary.exponent - 16383;
 	uni.t_binary.exponent = 16383;
 	return (uni.val);
@@ -105,7 +100,7 @@ static void			h_ldbl_neg(t_dbl *tab_dbl, t_printf *tab, int exponent)
 			last = (1000000000 >> power) * value;
 			tab_dbl->digits++;
 		}
-		re_positioning_pointers(tab_dbl, last, decal);
+		repos_pointers(tab_dbl, last, decal);
 		exponent += power;
 	}
 	calculate_nbr_integer(tab_dbl);
@@ -117,7 +112,7 @@ void				transform_ldbl_80b(t_dbl *tab_dbl, t_printf *tab)
 	int		exponent;
 
 	exponent = 0;
-	tab_dbl->ldbl = frxp(tab_dbl->ldbl, &exponent, tab_dbl, tab) * 2;
+	tab_dbl->ldbl = frxp(tab_dbl->ldbl, &exponent, tab_dbl) * 2;
 	if (tab_dbl->ldbl < 0)
 		return ;
 	if (tab_dbl->ldbl)

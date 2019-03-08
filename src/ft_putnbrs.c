@@ -6,43 +6,56 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:55:31 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/07 20:11:05 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/08 18:17:59 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_printf.h"
 
-bool	check_flags(t_flags flag, int method, t_flags first, t_flags second)
+bool	check_flags(t_flags flag, int m, t_flags f, t_flags s)
 {
-	if (method == 1 && (flag & (first | second)))
+	if (m == 1 && (flag & f) && (flag & s))
 		return (true);
-	else if (method == 2 && (flag & first) && !(flag & second))
+	else if (m == 2 && (flag & f) && !(flag & s))
 		return (true);
-	else if (method == 3 && !(flag & (first | second)))
+	else if (m == 3 && !(flag & f) && !(flag & s))
 		return (true);
 	return (false);
 }
 
-void	ft_putnbr_buffer_conv(uintmax_t res, t_printf *tab, char *base, int blen)
+void	putnbr_c(uintmax_t res, t_printf *tab, char *base, int bl)
 {
 	uintmax_t	rtn;
 
 	if (res > 0)
 	{
-		if (blen == 8)
-			ft_putnbr_buffer_conv((res >> 3), tab, base, blen);
-		else if (blen == 16)
-			ft_putnbr_buffer_conv((res >> 4), tab, base, blen);
+		if (bl == 8)
+			putnbr_c((res >> 3), tab, base, bl);
+		else if (bl == 16)
+			putnbr_c((res >> 4), tab, base, bl);
 	}
 	if (res != 0)
 	{
-		rtn = res & (blen - 1);
+		rtn = res & (bl - 1);
 		fill_buffer(base[rtn], tab);
 	}
 }
 
-void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
+int		uint_length(uintmax_t value, int base)
+{
+	size_t	i;
+
+	i = 0;
+	while (value > 0)
+	{
+		i++;
+		value /= base;
+	}
+	return ((i == 0) ? 1 : i);
+}
+
+void	putnbr_p(uintmax_t res, t_printf *tab)
 {
 	uintmax_t mod;
 	uintmax_t p;
@@ -52,7 +65,7 @@ void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
 	if (res > 9)
 	{
 		mod = res / 10;
-		ft_putnbr_buffer_pos(mod, tab);
+		putnbr_p(mod, tab);
 		p = (mod << 3) + (mod << 1);
 		mod = res - p;
 		fill_buffer((mod) + '0', tab);
@@ -61,7 +74,7 @@ void	ft_putnbr_buffer_pos(uintmax_t res, t_printf *tab)
 		fill_buffer(res + '0', tab);
 }
 
-void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab)
+void	putnbr_n(intmax_t res, t_printf *tab)
 {
 	intmax_t mod;
 	intmax_t p;
@@ -71,7 +84,7 @@ void	ft_putnbr_buffer_neg(intmax_t res, t_printf *tab)
 	if (res < -9)
 	{
 		mod = res / 10;
-		ft_putnbr_buffer_neg(mod, tab);
+		putnbr_n(mod, tab);
 		p = (mod << 3) + (mod << 1);
 		mod = res - p;
 		fill_buffer(-(mod) + '0', tab);
