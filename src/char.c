@@ -42,6 +42,6 @@ void		get_char(va_list ap, void *ptr)
 
 	tab = (t_printf*)ptr;
 	character = va_arg(ap, int);
-	if (character >= 0 && character <= 127)
+	if (character >= 0 && character <= 200)
 		check_char((unsigned char)character, tab);
 }

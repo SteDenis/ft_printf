@@ -6,22 +6,39 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/08 18:59:20 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 19:39:16 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/11 16:27:15 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <wchar.h>
 #include "ft_printf.h"
 
-size_t	ft_strlen_unicode(const wchar_t *str)
+size_t	ft_strlen_unicode(const wchar_t *str, t_printf *tab)
 {
 	size_t	i;
 	size_t	len;
+	size_t	tmp;
 
 	i = -1;
 	len = 0;
-	while (str[++i] != L'\0')
-		len += len_octects(str[i]);
+	if (tab->arg.flag & PREC)
+		while (str[++i] != L'\0')
+		{
+			if ((tmp = len_octects(str[i])) == 5)
+				return (-1);
+			if (tmp + len > (size_t)tab->arg.prec)
+				return (len);
+			else
+				len += tmp;
+		}
+	else
+		while (str[++i] != L'\0')
+		{
+			if ((tmp = len_octects(str[i])) == 5)
+				return (-1);
+			else
+				len += tmp;
+		}
 	return (len);
 }
 
@@ -32,7 +49,9 @@ size_t	len_octects(const wchar_t c)
 
 	val = (uint32_t)c;
 	len = 0;
-	if (val <= 0x7F)
+	if (val >= 0xd800 || val <= 0xdfff)
+		return (5);
+	else if (val <= 0x7F)
 		return (len = 1);
 	else if (val <= 0x7FF)
 		return (len = 2);

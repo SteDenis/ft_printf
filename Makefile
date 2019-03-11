@@ -9,7 +9,13 @@
 #    Updated: 2018/11/16 12:33:27 by stdenis          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
-include include.mk
+LIBFT_PRTF		:=	libftprintf.a
+
+LIBFT_PRTF_PATH	?=	.
+
+LIBFT_PRTF_LINK	:= -L $(LIBFT_PRTF_PATH) -l ftprintf
+LIBFT_PRTF_INC	:= -I $(LIBFT_PRTF_PATH)/inc
+
 NAME	:=	$(LIBFT_PRTF)
 
 SRC=	arguments.c		\
@@ -21,7 +27,11 @@ SRC=	arguments.c		\
 		unsigned.c		\
 		pointers.c		\
 		hexadecimal.c	\
+		print_double.c	\
 		double.c		\
+		binary.c		\
+		unicode.c		\
+		utils_unicode.c	\
 		transform_ldbl.c\
 		utils_double.c	\
 		octal.c			\

@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 13:55:31 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 18:17:59 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/11 18:30:26 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	putnbr_c(uintmax_t res, t_printf *tab, char *base, int bl)
 			putnbr_c((res >> 3), tab, base, bl);
 		else if (bl == 16)
 			putnbr_c((res >> 4), tab, base, bl);
+		else if (bl == 2)
+			putnbr_c((res >> 1), tab, base, bl);
 	}
 	if (res != 0)
 	{

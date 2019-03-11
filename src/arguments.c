@@ -6,25 +6,38 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:34:41 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 20:03:19 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/09 15:24:36 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		arg_printf(t_printf *tab, char c)
+static int		bonus_printf(t_printf *tab, char c)
 {
+	if ((c == 'S' || ((tab->arg.flag & L) && c == 's')) && ++tab->fmt)
+		tab->arg.type = SS;
+	else if ((c == 'C' || ((tab->arg.flag & L) && c == 'c')) && ++tab->fmt)
+		tab->arg.type = CC;
+	else if (c == 'b' && ++tab->fmt)
+		tab->arg.type = B;
+	else
+		tab->arg.type = 999;
+	return (1);
+}
+
+static int		arg_printf(t_printf *tab, char c)
+{
+	if (c == 'U' || c == 'O' || c == 'D')
+		tab->arg.flag = (tab->arg.flag | L) & ~(H) & ~(HH);
 	if (!(tab->arg.flag & L) && c == 's' && ++tab->fmt)
 		tab->arg.type = S;
-	else if ((c == 'S'  && ++tab->fmt) || ((tab->arg.flag & L) && c == 's' && ++tab->fmt))
-		tab->arg.type = SS;
-	else if ((c == 'd' || c == 'i') && ++tab->fmt)
+	else if ((c == 'd' || c == 'i' || c == 'D') && ++tab->fmt)
 		tab->arg.type = DI;
 	else if (c == 'x' && ++tab->fmt)
 		tab->arg.type = X;
 	else if (c == 'X' && ++tab->fmt)
 		tab->arg.type = XX;
-	else if (c == 'o' && ++tab->fmt)
+	else if ((c == 'o' || c == 'O') && ++tab->fmt)
 		tab->arg.type = O;
 	else if ((c == 'u' || c == 'U') && ++tab->fmt)
 		tab->arg.type = U;
@@ -32,20 +45,16 @@ int		arg_printf(t_printf *tab, char c)
 		tab->arg.type = P;
 	else if (!(tab->arg.flag & L) && c == 'c' && ++tab->fmt)
 		tab->arg.type = C;
-	else if ((c == 'C' && ++tab->fmt) || ((tab->arg.flag & L) && c == 'c' && ++tab->fmt))
-		tab->arg.type = CC;
 	else if (c == 'f' && ++tab->fmt)
 		tab->arg.type = F;
 	else if (c == '%' && ++tab->fmt)
 		tab->arg.type = PERCENT;
 	else
-		tab->arg.type = 999;
-	if (c == 'U')
-		tab->arg.flag = (tab->arg.flag | L) & ~(H);
+		return (bonus_printf(tab, c));
 	return (1);
 }
 
-int		conv_flags(t_printf *tab, const char *format)
+static int		conv_flags(t_printf *tab, const char *format)
 {
 	if (format[tab->fmt] == 'h')
 		if (tab->arg.flag & H)
@@ -68,7 +77,7 @@ int		conv_flags(t_printf *tab, const char *format)
 	return (1);
 }
 
-int		arg_flags(t_printf *tab, const char *format)
+static int		arg_flags(t_printf *tab, const char *format)
 {
 	if (format[tab->fmt] == '-')
 		tab->arg.flag = (tab->arg.flag | MINUS) & ~(ZERO);
@@ -90,7 +99,7 @@ int		arg_flags(t_printf *tab, const char *format)
 	return (1);
 }
 
-int		check_arg(const char *format, t_printf *tab)
+int				check_arg(const char *format, t_printf *tab)
 {
 	int		mode;
 

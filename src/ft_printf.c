@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 13:32:02 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 19:15:09 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/09 14:50:44 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	set_struct(t_printf *tab)
 	tab->dispatcher[8] = check_float;
 	tab->dispatcher[9] = get_string_uni;
 	tab->dispatcher[10] = get_char_uni;
+	tab->dispatcher[11] = check_binary;
 	tab->arg.type = 0;
 	tab->arg.larg = 0;
 	tab->arg.prec = 0;
@@ -55,7 +56,7 @@ int		ft_printf(const char *format, ...)
 	{
 		if (tab.arg.type == PERCENT)
 			check_string("%", &tab);
-		else if (tab.arg.type != 999)
+		else if (tab.arg.type <= 11)
 			tab.dispatcher[tab.arg.type](ap, &tab);
 		reset_arg(&tab);
 	}

@@ -47,11 +47,12 @@ enum {
 	F = 8,
 	SS = 9,
 	CC = 10,
-	PERCENT = 11
+	B = 11,
+	PERCENT = 12
 };
 
 typedef uint16_t	t_flags;
-typedef void		(*t_fnc[11])	(va_list ap, void *tab);
+typedef void		(*t_fnc[12])	(va_list ap, void *tab);
 
 typedef	struct		s_arg
 {
@@ -118,6 +119,10 @@ void				get_pointers(va_list ap, void *ptr);
 ** double.c
 */
 void				check_float(va_list ap, void *ptr);
+
+/*
+** print_double.c
+*/
 void				print_flags_ldbl(t_dbl *tab_dbl, t_printf *tab, char fill);
 void				print_zero(t_printf *tab, char fill, t_dbl *tab_dbl);
 
@@ -155,11 +160,16 @@ void				get_char_uni(va_list ap, void *ptr);
 void				get_string_uni(va_list ap, void *ptr);
 
 /*
+** binary.c
+*/
+void				check_binary(va_list ap, void *ptr);
+
+/*
 ** utils_unicode.c
 */
 
 size_t				len_octects(const wchar_t c);
-size_t				ft_strlen_unicode(const wchar_t *str);
+size_t				ft_strlen_unicode(const wchar_t *str, t_printf *tab);
 
 /*
 ** utils.c

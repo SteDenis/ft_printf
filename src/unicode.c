@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/08 18:52:32 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/08 20:08:53 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/11 16:16:20 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,24 @@ static void	check_char_uni(uint32_t value, t_printf *tab, size_t len)
 void		get_char_uni(va_list ap, void *ptr)
 {
 	t_printf	*tab;
+	char		fill;
 	wchar_t		character;
 	uint32_t	value;
 	size_t		len;
 
+	fill = ' ';
 	tab = (t_printf*)ptr;
 	character = va_arg(ap, wchar_t);
 	value = (uint32_t)character;
 	len = len_octects(character);
 	tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
+	if ((tab->arg.flag & ZERO))
+		fill = '0';
 	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-		fill_buffer(' ', tab);
+		fill_buffer(fill, tab);
 	check_char_uni(value, tab, len);
 	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-		fill_buffer(' ', tab);
+		fill_buffer(fill, tab);
 }
 
 void		while_wstr(wchar_t *str, t_printf *tab, size_t len)
@@ -74,23 +78,25 @@ void		while_wstr(wchar_t *str, t_printf *tab, size_t len)
 void		get_string_uni(va_list ap, void *ptr)
 {
 	t_printf	*tab;
+	char		fill;
 	wchar_t		*string;
 	size_t		len;
 
 	tab = (t_printf*)ptr;
+	fill = ' ';
 	string = va_arg(ap, wchar_t*);
 	if (string == NULL)
 		check_string(NULL, tab);
 	else
 	{
-		len = ft_strlen_unicode(string);
-		if (tab->arg.flag & PREC)
-			len = ((int)len < tab->arg.prec) ? len : tab->arg.prec;
+		if ((tab->arg.flag & ZERO))
+			fill = '0';
+		len = ft_strlen_unicode(string, tab);
 		tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
 		while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-			fill_buffer(' ', tab);
+			fill_buffer(fill, tab);
 		while_wstr(string, tab, len);
 		while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-			fill_buffer(' ', tab);
+			fill_buffer(fill, tab);
 	}
 }
