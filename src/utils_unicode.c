@@ -49,7 +49,7 @@ size_t	len_octects(const wchar_t c)
 
 	val = (uint32_t)c;
 	len = 0;
-	if (val >= 0xd800 || val <= 0xdfff)
+	if (val >= 0xd800 && val <= 0xdfff)
 		return (5);
 	else if (val <= 0x7F)
 		return (len = 1);
