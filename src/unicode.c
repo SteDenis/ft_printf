@@ -49,15 +49,17 @@ void		get_char_uni(va_list ap, void *ptr)
 	tab = (t_printf*)ptr;
 	character = va_arg(ap, wchar_t);
 	value = (uint32_t)character;
-	len = len_octects(character);
-	tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
-	if ((tab->arg.flag & ZERO))
-		fill = '0';
-	while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-		fill_buffer(fill, tab);
-	check_char_uni(value, tab, len);
-	while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-		fill_buffer(fill, tab);
+	if ((len = len_octects(character)) > 0)
+	{
+		tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
+		if ((tab->arg.flag & ZERO))
+			fill = '0';
+		while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+			fill_buffer(fill, tab);
+		check_char_uni(value, tab, len);
+		while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+			fill_buffer(fill, tab);
+	}
 }
 
 void		while_wstr(wchar_t *str, t_printf *tab, size_t len)
@@ -91,12 +93,14 @@ void		get_string_uni(va_list ap, void *ptr)
 	{
 		if ((tab->arg.flag & ZERO))
 			fill = '0';
-		len = ft_strlen_unicode(string, tab);
-		tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
-		while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-			fill_buffer(fill, tab);
-		while_wstr(string, tab, len);
-		while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
-			fill_buffer(fill, tab);
+		if ((len = ft_strlen_unicode(string, tab)) > 0)
+		{
+			tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
+			while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+				fill_buffer(fill, tab);
+			while_wstr(string, tab, len);
+			while ((tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
+				fill_buffer(fill, tab);
+		}
 	}
 }

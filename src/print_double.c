@@ -12,12 +12,11 @@
 
 #include "ft_printf.h"
 #include "double.h"
-#include <stdio.h>
 
 static void	print_decimal(t_dbl *tab_dbl, t_printf *tab)
 {
 	int		len;
-	int 	i;
+	int		i;
 
 	while (tab_dbl->digits < tab_dbl->last && tab->arg.prec > 0)
 	{
