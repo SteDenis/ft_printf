@@ -6,7 +6,7 @@
 /*   By: stdenis <stdenis@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/08 18:52:32 by stdenis           #+#    #+#             */
-/*   Updated: 2019/03/11 16:16:20 by stdenis          ###   ########.fr       */
+/*   Updated: 2019/03/15 18:10:12 by stdenis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void		get_string_uni(va_list ap, void *ptr)
 	t_printf	*tab;
 	char		fill;
 	wchar_t		*string;
-	size_t		len;
+	int			len;
 
 	tab = (t_printf*)ptr;
 	fill = ' ';
@@ -93,9 +93,10 @@ void		get_string_uni(va_list ap, void *ptr)
 	{
 		if ((tab->arg.flag & ZERO))
 			fill = '0';
-		if ((len = ft_strlen_unicode(string, tab)) > 0)
+		if ((len = ft_strlen_unicode(string, tab)) >= 0)
 		{
-			tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
+			if ((tab->arg.flag & PREC) && tab->arg.prec > 0)
+				tab->arg.larg -= (tab->arg.larg > 0) ? len : 0;
 			while (!(tab->arg.flag & MINUS) && tab->arg.larg-- > 0)
 				fill_buffer(fill, tab);
 			while_wstr(string, tab, len);

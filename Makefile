@@ -9,12 +9,8 @@
 #    Updated: 2018/11/16 12:33:27 by stdenis          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
-LIBFT_PRTF		:=	libftprintf.a
 
-LIBFT_PRTF_PATH	?=	.
-
-LIBFT_PRTF_LINK	:= -L $(LIBFT_PRTF_PATH) -l ftprintf
-LIBFT_PRTF_INC	:= -I $(LIBFT_PRTF_PATH)/inc
+include include.mk
 
 NAME	:=	$(LIBFT_PRTF)
 
